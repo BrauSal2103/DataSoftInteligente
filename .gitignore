@@ -1,0 +1,11 @@
+venv/
+env/
+.env
+
+__pycache__/
+*.pyc
+
+.vscode/
+
+scatter_correlacion.png
+heatmap_metricas.png
