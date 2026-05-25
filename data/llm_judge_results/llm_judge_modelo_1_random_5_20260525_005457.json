@@ -1,0 +1,62 @@
+{
+  "model": "Modelo 1",
+  "selection_mode": "random",
+  "eval_limit": 5,
+  "random_state": 42,
+  "selected_ids": [
+    13,
+    962,
+    953,
+    968,
+    17
+  ],
+  "results": [
+    {
+      "id": 13,
+      "Text": "Comer para crecer",
+      "Prediction": "pict_2349 pict_7002",
+      "LLM_Judge_Score": 4,
+      "LLM_Judge_Errors": [],
+      "LLM_Judge_Missing": [
+        "La preposición 'para' (conector de finalidad)"
+      ],
+      "LLM_Judge_Comments": "La secuencia de pictogramas transmite de manera muy clara el mensaje principal utilizando los conceptos clave de 'comer' (pict_2349) y 'crecer' (pict_7002). Se ha omitido el conector 'para', lo cual es una práctica estándar y recomendada en la comunicación aumentativa y alternativa (CAA) para simplificar la sintaxis, aunque técnicamente constituye la omisión de un elemento secundario."
+    },
+    {
+      "id": 962,
+      "Text": "Partes del cartel",
+      "Prediction": "pict_9877 pict_8064",
+      "LLM_Judge_Score": 5,
+      "LLM_Judge_Errors": [],
+      "LLM_Judge_Missing": [],
+      "LLM_Judge_Comments": "La secuencia de pictogramas representa de manera exacta y simplificada el concepto 'Partes del cartel'. El primer pictograma (pict_9877) se asocia al concepto de 'partes' o división, y el segundo (pict_8064) representa un 'cartel' o póster. La combinación es directa, coherente y perfectamente comprensible en el contexto de la comunicación aumentativa y alternativa sin omitir ningún elemento esencial."
+    },
+    {
+      "id": 953,
+      "Text": "Mis fortalezas",
+      "Prediction": "pict_12266 pict_36539",
+      "LLM_Judge_Score": 5,
+      "LLM_Judge_Errors": [],
+      "LLM_Judge_Missing": [],
+      "LLM_Judge_Comments": "La secuencia de pictogramas representa de manera excelente el texto original. El primer pictograma (pict_12266) corresponde al posesivo 'mi' y el segundo (pict_36539) representa el concepto de 'fortaleza'. Aunque el texto original está en plural ('fortalezas'), en los sistemas de CAA es totalmente correcto y habitual utilizar el término en singular para representar el concepto general, por lo que la transmisión del mensaje es perfecta y sin ambigüedades."
+    },
+    {
+      "id": 968,
+      "Text": "Trabajos manuales",
+      "Prediction": "pict_16087 pict_32661",
+      "LLM_Judge_Score": 5,
+      "LLM_Judge_Errors": [],
+      "LLM_Judge_Missing": [],
+      "LLM_Judge_Comments": "La secuencia de pictogramas representa de manera excelente el concepto de 'Trabajos manuales'. El primer pictograma (pict_16087) corresponde a 'trabajo' y el segundo (pict_32661) a 'manualidades', logrando una transmisión semántica precisa, coherente y sin ambigüedades."
+    },
+    {
+      "id": 17,
+      "Text": "La paleontóloga descubre los huesos de dinosaurio",
+      "Prediction": "pict_7029 pict_34256 pict_6019 pict_2972 pict_2738",
+      "LLM_Judge_Score": 5,
+      "LLM_Judge_Errors": [],
+      "LLM_Judge_Missing": [],
+      "LLM_Judge_Comments": "La secuencia de pictogramas representa de manera excelente el mensaje original. Se incluyen todos los conceptos clave ('paleontóloga', 'descubrir', 'hueso', 'de', 'dinosaurio') en un orden sintáctico totalmente coherente. La omisión de los artículos ('la', 'los') es una práctica estándar y correcta en la Comunicación Aumentativa y Alternativa (CAA) para evitar la sobrecarga de información sin perder el significado."
+    }
+  ]
+}
