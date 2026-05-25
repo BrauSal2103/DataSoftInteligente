@@ -1,0 +1,66 @@
+{
+  "model": "Modelo 1",
+  "selection_mode": "random",
+  "eval_limit": 5,
+  "random_state": 42,
+  "selected_ids": [
+    13,
+    962,
+    953,
+    968,
+    17
+  ],
+  "results": [
+    {
+      "id": 13,
+      "Text": "Comer para crecer",
+      "Prediction": "pict_2349 pict_7002",
+      "score": 5,
+      "semantic_errors": [],
+      "missing_concepts": [],
+      "comments": "La secuencia de pictogramas transmite perfectamente la idea central de 'Comer para crecer' utilizando los conceptos clave de 'comer' y 'crecer'. La omisión de la preposición 'para' es totalmente adecuada y recomendada en la comunicación aumentativa y alternativa (CAA) para facilitar la comprensión en niños con dificultades de comunicación, evitando la sobrecarga cognitiva sin perder el significado global."
+    },
+    {
+      "id": 962,
+      "Text": "Partes del cartel",
+      "Prediction": "pict_9877 pict_8064",
+      "score": 5,
+      "semantic_errors": [],
+      "missing_concepts": [],
+      "comments": "La secuencia de pictogramas transmite de manera clara y directa la idea de 'partes del cartel'. Se identifican los conceptos clave ('cartel' y 'partes') sin elementos distractores. La omisión de la preposición 'del' es totalmente correcta en la comunicación aumentativa y no afecta la comprensión global."
+    },
+    {
+      "id": 953,
+      "Text": "Mis fortalezas",
+      "Prediction": "pict_12266 pict_36539",
+      "score": 2,
+      "semantic_errors": [
+        "Traducción literal errónea del concepto 'fortalezas' (cualidades/habilidades) utilizando un pictograma que representa una fortificación o castillo (fortaleza física)."
+      ],
+      "missing_concepts": [
+        "Cualidades personales",
+        "Habilidades",
+        "Puntos fuertes"
+      ],
+      "comments": "La secuencia genera una confusión semántica importante. Al traducir 'fortalezas' de forma literal como una edificación militar (castillo/fuerte) en lugar de virtudes o capacidades personales, el mensaje original se pierde por completo. Para un niño, la combinación se interpretará como 'mis castillos' o 'mis fuertes', distorsionando la intención comunicativa de autorreconocimiento y autoestima."
+    },
+    {
+      "id": 968,
+      "Text": "Trabajos manuales",
+      "Prediction": "pict_16087 pict_32661",
+      "score": 5,
+      "semantic_errors": [],
+      "missing_concepts": [],
+      "comments": "La secuencia de pictogramas transmite de manera excelente y directa el concepto de 'trabajos manuales'. La combinación de los términos representados es clara, directa y perfectamente comprensible para el grupo objetivo sin requerir esfuerzo cognitivo adicional."
+    },
+    {
+      "id": 17,
+      "Text": "La paleontóloga descubre los huesos de dinosaurio",
+      "Prediction": "pict_7029 pict_34256 pict_6019 pict_2972 pict_2738",
+      "score": 5,
+      "semantic_errors": [],
+      "missing_concepts": [],
+      "comments": "La secuencia de pictogramas representa de manera excelente y precisa la idea central de la frase. Se identifican claramente los elementos clave: el sujeto (paleontóloga), la acción (descubrir) y el objeto (huesos de dinosaurio). La omisión de los artículos 'la' y 'los' es una práctica correcta y recomendada en la comunicación aumentativa y alternativa (CAA) para reducir la carga cognitiva, por lo que el mensaje se entiende perfectamente sin ellos."
+    }
+  ]
+}
