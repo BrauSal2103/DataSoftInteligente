@@ -9,3 +9,5 @@ __pycache__/
 
 scatter_correlacion.png
 heatmap_metricas.png
+*.png
+!comparativa_modelos_grouped_bar.png
