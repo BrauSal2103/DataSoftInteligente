@@ -1,0 +1,5 @@
+fastapi
+uvicorn[standard]
+sacrebleu
+python-multipart
+requests
