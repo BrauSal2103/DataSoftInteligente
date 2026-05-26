@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { Example, HumanEvaluation, LLMJudgeResult, ModelKey, SessionInfo } from '../types/dataset';
 
-const api = axios.create({ baseURL: import.meta.env.VITE_API_BASE_URL ?? 'http://localhost:8000' });
+const api = axios.create({ baseURL: import.meta.env.VITE_API_BASE_URL ?? 'http://localhost:8000', timeout: 120000 });
 
 export type ProgressResult = { total: number; evaluated: number; pending: number; progress: number };
 export type MetricSummary = {
@@ -9,12 +9,13 @@ export type MetricSummary = {
   chrf: { model: string; value: number | null }[];
   conceptF1: { model: string; value: number | null }[];
   coverage: { model: string; value: number | null }[];
+  semanticSimilarity: { model: string; value: number | null }[];
 };
 
 export const uploadDataset = async (file: File) => {
   const formData = new FormData();
   formData.append('file', file);
-  const response = await api.post('/api/datasets/upload', formData, { headers: { 'Content-Type': 'multipart/form-data' } });
+  const response = await api.post('/api/datasets/upload', formData);
   return response.data as { success: boolean; sessionId: string; filename: string; examplesCount: number };
 };
 
