@@ -7,7 +7,10 @@ import uuid
 from pathlib import Path
 from typing import Optional
 
-from metrics import compute_example_metrics, compute_session_summary, evaluate_with_gemini, _load_model_records
+try:
+    from .metrics import compute_example_metrics, compute_session_summary, evaluate_with_gemini, _load_model_records
+except ImportError:
+    from metrics import compute_example_metrics, compute_session_summary, evaluate_with_gemini, _load_model_records
 
 ROOT = Path(__file__).resolve().parents[1]
 DATA_DIR = ROOT / 'data'
