@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { Example, HumanEvaluation, LLMJudgeResult, SessionInfo } from '../types/dataset';
+import { Example, HumanEvaluation, LLMJudgeResult, ModelKey, SessionInfo } from '../types/dataset';
 
 const api = axios.create({ baseURL: import.meta.env.VITE_API_BASE_URL ?? 'http://localhost:8000' });
 
@@ -38,9 +38,47 @@ export const calculateMetrics = async (example: Example, sessionId?: string) => 
   return response.data as { exampleId: number | string; metrics: Example['metrics']; stored: string };
 };
 
-export const runLLMJudge = async (example: Example, sessionId?: string): Promise<LLMJudgeResult> => {
-  const response = await api.post(`/api/examples/${example.id}/llm-judge`, null, { params: sessionId ? { sessionId } : undefined });
-  return response.data.llmJudge as LLMJudgeResult;
+export type LLMJudgeApiResponse = {
+  exampleId: number | string;
+  modelKey: ModelKey;
+  modelLabel: string;
+  promptMode?: 'strict' | 'flexible';
+  llmJudge: LLMJudgeResult;
+  stored: string;
+};
+
+export type LLMJudgeBatchRequest = {
+  modelKey: ModelKey;
+  promptMode: 'strict' | 'flexible';
+  selectionMode: 'random' | 'ids';
+  evalLimit: number;
+  ids: Array<number | string>;
+  seed: number;
+};
+
+export type LLMJudgeBatchResponse = {
+  modelKey: ModelKey;
+  promptMode: 'strict' | 'flexible';
+  selectionMode: 'random' | 'ids';
+  evalLimit: number;
+  seed: number;
+  selectedIds: Array<number | string>;
+  results: Array<{ id: number | string; texto: string; prediction: string; llmJudge: LLMJudgeResult }>;
+  stored: string[];
+};
+
+export const runLLMJudge = async (example: Example, sessionId?: string, modelKey: ModelKey = 'modelo_1', promptMode: 'strict' | 'flexible' = 'strict') => {
+  const response = await api.post(`/api/examples/${example.id}/llm-judge`, null, {
+    params: sessionId ? { sessionId, modelKey, promptMode } : { modelKey, promptMode },
+  });
+  return response.data as LLMJudgeApiResponse;
+};
+
+export const runLLMJudgeBatch = async (payload: LLMJudgeBatchRequest, sessionId?: string) => {
+  const response = await api.post('/api/llm-judge/batch', payload, {
+    params: sessionId ? { sessionId } : undefined,
+  });
+  return response.data as LLMJudgeBatchResponse;
 };
 
 export const saveHumanEvaluationApi = async (payload: { exampleId: string | number; evaluation: HumanEvaluation }, session?: SessionInfo | null) => {
