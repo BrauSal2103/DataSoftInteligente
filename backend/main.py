@@ -262,10 +262,17 @@ def llm_judge_batch(body: LLMJudgeBatchRequest, sessionId: Optional[str] = Query
     if body.selectionMode not in {'random', 'ids'}:
         raise HTTPException(400, 'invalid selectionMode')
 
-    available_ids = sorted(by_id.keys())
+    model_prediction_ids = set()
+    for example_id in model_records.get(body.modelKey, {}):
+        try:
+            model_prediction_ids.add(int(example_id))
+        except (TypeError, ValueError):
+            continue
+
+    available_ids = sorted(example_id for example_id in by_id.keys() if example_id in model_prediction_ids)
     selected_ids: list[int]
     if body.selectionMode == 'ids':
-        selected_ids = [candidate_id for candidate_id in body.ids if candidate_id in by_id]
+        selected_ids = [candidate_id for candidate_id in body.ids if candidate_id in by_id and candidate_id in model_prediction_ids]
     else:
         import random
 

@@ -345,6 +345,13 @@ def evaluate_with_gemini(
     text_original = _example_text(example)
     model_map = _example_model_map(example, model_records) if model_records else _available_model_keys(example)
     prediction_tokens = _clean_sequence(model_map.get(model_key))
+    if not prediction_tokens:
+        return {
+            'score': None,
+            'semantic_errors': ['No se encontró una secuencia de pictogramas para evaluar.'],
+            'missing_concepts': [],
+            'comments': 'El modelo no proporcionó una secuencia de pictogramas para este ejemplo y no se envió la evaluación a Gemini.',
+        }
     prediction_text = ' '.join(prediction_tokens)
 
     key = os.environ.get('GEMINI_API_KEY')

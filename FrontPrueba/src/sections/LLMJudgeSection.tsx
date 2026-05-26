@@ -22,6 +22,30 @@ const promptOptions: { key: PromptMode; label: string; description: string }[] =
 type BatchRow = { id: number | string; texto: string; prediction: string; llmJudge: LLMJudgeResult };
 type LogLine = { kind: 'info' | 'success' | 'error'; text: string };
 
+function createSeededRandom(seed: number) {
+  let value = seed % 2147483647;
+  if (value <= 0) {
+    value += 2147483646;
+  }
+
+  return () => {
+    value = (value * 16807) % 2147483647;
+    return (value - 1) / 2147483646;
+  };
+}
+
+function shuffleWithSeed<T>(items: T[], seed: number) {
+  const random = createSeededRandom(seed);
+  const shuffled = [...items];
+
+  for (let index = shuffled.length - 1; index > 0; index -= 1) {
+    const swapIndex = Math.floor(random() * (index + 1));
+    [shuffled[index], shuffled[swapIndex]] = [shuffled[swapIndex], shuffled[index]];
+  }
+
+  return shuffled;
+}
+
 export default function LLMJudgeSection({ examples, sessionId }: { examples: Example[]; sessionId?: string | null }) {
   const [modelKey, setModelKey] = useState<ModelKey>('modelo_1');
   const [selectionMode, setSelectionMode] = useState<SelectionMode>('random');
@@ -36,6 +60,10 @@ export default function LLMJudgeSection({ examples, sessionId }: { examples: Exa
   const [logs, setLogs] = useState<LogLine[]>([{ kind: 'info', text: 'Listo para ejecutar LLM-Judge.' }]);
 
   const availableIds = useMemo(() => examples.map((example) => example.id), [examples]);
+  const randomizableExamples = useMemo(
+    () => examples.filter((example) => (example[modelKey]?.length ?? 0) > 0),
+    [examples, modelKey],
+  );
   const parsedIds = useMemo(
     () => idsText
       .split(',')
@@ -44,7 +72,7 @@ export default function LLMJudgeSection({ examples, sessionId }: { examples: Exa
       .map((value) => (Number.isNaN(Number(value)) ? value : Number(value))),
     [idsText],
   );
-  const plannedRecords = selectionMode === 'ids' ? parsedIds.length : Math.max(1, Math.min(evalLimit, availableIds.length));
+  const plannedRecords = selectionMode === 'ids' ? parsedIds.length : Math.max(1, Math.min(evalLimit, randomizableExamples.length));
 
   const appendLog = (line: LogLine) => {
     setLogs((previous) => [...previous, line]);
@@ -70,15 +98,13 @@ export default function LLMJudgeSection({ examples, sessionId }: { examples: Exa
     try {
       const selected = selectionMode === 'ids'
         ? parsedIds.filter((id) => availableIds.some((availableId) => String(availableId) === String(id)))
-        : [...availableIds]
-            .map((id) => ({ id, random: Math.random() }))
-            .sort((left, right) => left.random - right.random)
+        : shuffleWithSeed(randomizableExamples, seed)
             .slice(0, plannedRecords)
             .map((item) => item.id);
 
       if (!selected.length) {
-        appendLog({ kind: 'error', text: 'No se encontraron IDs válidos para evaluar.' });
-        setStatus('No se encontraron IDs válidos para evaluar.');
+        appendLog({ kind: 'error', text: selectionMode === 'random' ? 'No se encontraron ejemplos con predicción para el modelo seleccionado.' : 'No se encontraron IDs válidos para evaluar.' });
+        setStatus(selectionMode === 'random' ? 'No hay ejemplos con predicción para el modelo seleccionado.' : 'No se encontraron IDs válidos para evaluar.');
         return;
       }
 
