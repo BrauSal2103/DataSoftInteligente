@@ -11,6 +11,16 @@ scatter_correlacion.png
 
 .ipynb_checkpoints/
 **/ .ipynb_checkpoints/
-/backend/data
+
+# Frontend
+FrontPrueba/node_modules/
+FrontPrueba/dist/
+FrontPrueba/.git/
+FrontPrueba/*.tsbuildinfo
+
+# Backend
+backend/__pycache__/
+backend/venv/
+backend/.env
+backend/data/
 /FrontPrueba/.vite
-/FrontPrueba/node_modules

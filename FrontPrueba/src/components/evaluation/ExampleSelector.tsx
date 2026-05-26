@@ -1,0 +1,1 @@
+export default ({ids,value,onChange}:{ids:(string|number)[];value:number;onChange:(n:number)=>void})=><select className='rounded border border-[#1F2937] bg-[#111827] p-2' value={value} onChange={(e)=>onChange(Number(e.target.value))}>{ids.map((id,i)=><option value={i} key={String(id)}>{id}</option>)}</select>;
