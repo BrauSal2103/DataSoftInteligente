@@ -4,9 +4,10 @@ import { useDataset } from '../context/DatasetContext';
 import WorkspaceLayout from '../components/layout/WorkspaceLayout';
 import SummarySection from '../sections/SummarySection';
 import MetricSection from '../sections/MetricSection';
+import LLMJudgeSection from '../sections/LLMJudgeSection';
 import { calculateMetrics, getMetricSummary, getProgress } from '../services/evaluationApi';
 
-type Tab = 'Dashboard' | 'BLEU' | 'chrF++' | 'Concept F1' | 'Coverage';
+type Tab = 'Dashboard' | 'BLEU' | 'chrF++' | 'Concept F1' | 'Coverage' | 'LLM Judge';
 
 export default function EvaluationWorkspace() {
   const navigate = useNavigate();
@@ -63,12 +64,13 @@ export default function EvaluationWorkspace() {
     'chrF++': 'chrf',
     'Concept F1': 'conceptF1',
     Coverage: 'coverage',
+    'LLM Judge': 'coverage',
   };
 
   return (
     <WorkspaceLayout active={tab} onChangeTab={setTab} onReset={() => { dataset.resetDataset(); navigate('/'); }}>
       {tab === 'Dashboard' && <SummarySection total={dataset.totalCount} evaluated={dataset.evaluatedCount} onGo={setTab} examples={dataset.examples} session={dataset.session} backendProgress={progressSnapshot.total ? progressSnapshot : dataset.backendProgress} jsonPreview={jsonPreview} />}
-      {tab !== 'Dashboard' && (
+      {tab !== 'Dashboard' && tab !== 'LLM Judge' && (
         <MetricSection
           metricKey={metricMap[tab]}
           examples={dataset.examples}
@@ -80,6 +82,7 @@ export default function EvaluationWorkspace() {
           summary={metricSummary ?? dataset.metricSummary as any}
         />
       )}
+      {tab === 'LLM Judge' && <LLMJudgeSection examples={dataset.examples} sessionId={dataset.session?.sessionId ?? null} />}
     </WorkspaceLayout>
   );
 }

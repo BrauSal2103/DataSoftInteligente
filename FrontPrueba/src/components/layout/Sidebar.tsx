@@ -1,6 +1,6 @@
-import { BarChart3, ClipboardCheck, LayoutDashboard, Sigma, ArrowUpCircle, TrendingUp } from 'lucide-react';
+import { BarChart3, ClipboardCheck, LayoutDashboard, Sigma, ArrowUpCircle, TrendingUp, BrainCircuit } from 'lucide-react';
 
-type Tab = 'Dashboard' | 'BLEU' | 'chrF++' | 'Concept F1' | 'Coverage';
+type Tab = 'Dashboard' | 'BLEU' | 'chrF++' | 'Concept F1' | 'Coverage' | 'LLM Judge';
 
 const items: { label: Tab; icon: any }[] = [
   { label: 'Dashboard', icon: LayoutDashboard },
@@ -8,6 +8,7 @@ const items: { label: Tab; icon: any }[] = [
   { label: 'chrF++', icon: BarChart3 },
   { label: 'Concept F1', icon: Sigma },
   { label: 'Coverage', icon: TrendingUp },
+  { label: 'LLM Judge', icon: BrainCircuit },
 ];
 
 export default function Sidebar({ active, onChange }: { active: Tab; onChange: (tab: Tab) => void }) {
