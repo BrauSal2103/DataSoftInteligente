@@ -11,3 +11,6 @@ scatter_correlacion.png
 
 .ipynb_checkpoints/
 **/ .ipynb_checkpoints/
+/backend/data
+/FrontPrueba/.vite
+/FrontPrueba/node_modules
