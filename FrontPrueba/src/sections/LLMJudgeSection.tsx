@@ -2,7 +2,7 @@ import { useMemo, useState } from 'react';
 import { Example, ModelKey, LLMJudgeResult } from '../types/dataset';
 import Card from '../components/ui/Card';
 import Button from '../components/ui/Button';
-import { runLLMJudgeBatch } from '../services/evaluationApi';
+import { runLLMJudge } from '../services/evaluationApi';
 
 type PromptMode = 'strict' | 'flexible';
 type SelectionMode = 'random' | 'ids';
@@ -20,6 +20,7 @@ const promptOptions: { key: PromptMode; label: string; description: string }[] =
 ];
 
 type BatchRow = { id: number | string; texto: string; prediction: string; llmJudge: LLMJudgeResult };
+type LogLine = { kind: 'info' | 'success' | 'error'; text: string };
 
 export default function LLMJudgeSection({ examples, sessionId }: { examples: Example[]; sessionId?: string | null }) {
   const [modelKey, setModelKey] = useState<ModelKey>('modelo_1');
@@ -32,12 +33,18 @@ export default function LLMJudgeSection({ examples, sessionId }: { examples: Exa
   const [status, setStatus] = useState('Configura el lote y ejecuta el juez.');
   const [selectedIds, setSelectedIds] = useState<Array<number | string>>([]);
   const [results, setResults] = useState<BatchRow[]>([]);
+  const [logs, setLogs] = useState<LogLine[]>([{ kind: 'info', text: 'Listo para ejecutar LLM-Judge.' }]);
 
   const availableIds = useMemo(() => examples.map((example) => example.id), [examples]);
+
+  const appendLog = (line: LogLine) => {
+    setLogs((previous) => [...previous, line]);
+  };
 
   const handleRun = async () => {
     if (!sessionId) {
       setStatus('No hay una sesión activa. Carga un dataset primero.');
+      setLogs([{ kind: 'error', text: 'No hay una sesión activa. Carga un dataset primero.' }]);
       return;
     }
 
@@ -49,22 +56,61 @@ export default function LLMJudgeSection({ examples, sessionId }: { examples: Exa
       .map((value) => (Number.isNaN(Number(value)) ? value : Number(value)));
 
     setRunning(true);
-    setStatus('Ejecutando Gemini...');
+    setSelectedIds([]);
+    setResults([]);
+    setLogs([
+      { kind: 'info', text: `Modelo seleccionado: ${modelOptions.find((item) => item.key === modelKey)?.label ?? modelKey}` },
+      { kind: 'info', text: `Prompt: ${promptMode === 'strict' ? 'Estricto' : 'Flexible'}` },
+      { kind: 'info', text: `Modo de selección: ${selectionMode === 'random' ? 'Aleatorio' : 'IDs específicos'}` },
+      { kind: 'info', text: `Cantidad solicitada: ${maxRecords}` },
+    ]);
+    setStatus('Preparando lote...');
     try {
-      const response = await runLLMJudgeBatch({
-        modelKey,
-        promptMode,
-        selectionMode,
-        evalLimit: maxRecords,
-        ids: parsedIds,
-        seed,
-      }, sessionId);
-      setSelectedIds(response.selectedIds);
-      setResults(response.results);
-      setStatus(`Procesados ${response.results.length} registros con prompt ${promptMode === 'strict' ? 'estricto' : 'flexible'}.`);
+      const selected = selectionMode === 'ids'
+        ? parsedIds.filter((id) => availableIds.some((availableId) => String(availableId) === String(id))).slice(0, maxRecords)
+        : [...availableIds]
+            .map((id) => ({ id, random: Math.random() }))
+            .sort((left, right) => left.random - right.random)
+            .slice(0, maxRecords)
+            .map((item) => item.id);
+
+      if (!selected.length) {
+        appendLog({ kind: 'error', text: 'No se encontraron IDs válidos para evaluar.' });
+        setStatus('No se encontraron IDs válidos para evaluar.');
+        return;
+      }
+
+      setSelectedIds(selected);
+      appendLog({ kind: 'info', text: `IDs seleccionados: ${selected.join(', ')}` });
+
+      const nextResults: BatchRow[] = [];
+      for (const [index, id] of selected.entries()) {
+        appendLog({ kind: 'info', text: `(${index + 1}/${selected.length}) Evaluando ID ${id}...` });
+        const example = examples.find((item) => String(item.id) === String(id));
+        if (!example) {
+          appendLog({ kind: 'error', text: `ID ${id} no encontrado en el dataset cargado.` });
+          continue;
+        }
+
+        const response = await runLLMJudge(example, sessionId, modelKey, promptMode);
+        const row = {
+          id,
+          texto: example.texto,
+          prediction: example[modelKey]?.length ? example[modelKey].map((item) => item.label).join(' ') : '',
+          llmJudge: response.llmJudge,
+        };
+        nextResults.push(row);
+        setResults([...nextResults]);
+        appendLog({ kind: 'success', text: `ID ${id} completado con score ${response.llmJudge.score ?? '—'}.` });
+      }
+
+      setResults(nextResults);
+      setStatus(`Procesados ${nextResults.length} registros con prompt ${promptMode === 'strict' ? 'estricto' : 'flexible'}.`);
+      appendLog({ kind: 'success', text: `Proceso terminado: ${nextResults.length} registros evaluados.` });
     } catch (error) {
       console.error('No se pudo ejecutar el lote de LLM-Judge', error);
       setStatus('No se pudo ejecutar el lote. Revisa el backend y la API key de Gemini.');
+      appendLog({ kind: 'error', text: 'No se pudo ejecutar el lote. Revisa el backend y la API key de Gemini.' });
     } finally {
       setRunning(false);
     }
@@ -74,7 +120,7 @@ export default function LLMJudgeSection({ examples, sessionId }: { examples: Exa
     <div className='space-y-6'>
       <div>
         <h1 className='text-6xl font-bold'>LLM Judge</h1>
-        <p className='mt-2 text-2xl text-slate-300'>Ejecución por lotes con Gemini, usando el mismo criterio del notebook.</p>
+        <p className='mt-2 text-2xl text-slate-300'>Ejecución por lotes del dataset cargado para someterlo al juez LLM.</p>
       </div>
 
       <Card className='space-y-5 p-6'>
@@ -87,22 +133,40 @@ export default function LLMJudgeSection({ examples, sessionId }: { examples: Exa
           </label>
 
           <label className='flex flex-col gap-2 text-sm text-slate-300'>
-            Cantidad de registros
-            <input className='rounded-xl border border-[#1F2937] bg-[#111827] px-3 py-2 text-white' type='number' min={1} max={availableIds.length || 1} value={evalLimit} onChange={(event) => setEvalLimit(Number(event.target.value) || 1)} />
-          </label>
-
-          <label className='flex flex-col gap-2 text-sm text-slate-300'>
             Modo de selección
             <select className='rounded-xl border border-[#1F2937] bg-[#111827] px-3 py-2 text-white' value={selectionMode} onChange={(event) => setSelectionMode(event.target.value as SelectionMode)}>
               <option value='random'>Aleatorio</option>
               <option value='ids'>IDs específicos</option>
             </select>
           </label>
+        </div>
 
-          <label className='flex flex-col gap-2 text-sm text-slate-300'>
-            Semilla aleatoria
-            <input className='rounded-xl border border-[#1F2937] bg-[#111827] px-3 py-2 text-white' type='number' value={seed} onChange={(event) => setSeed(Number(event.target.value) || 42)} />
-          </label>
+        <div className='grid gap-4 lg:grid-cols-2'>
+          {selectionMode === 'random' && (
+            <>
+              <label className='flex flex-col gap-2 text-sm text-slate-300'>
+                Cantidad de registros
+                <input className='rounded-xl border border-[#1F2937] bg-[#111827] px-3 py-2 text-white' type='number' min={1} max={availableIds.length || 1} value={evalLimit} onChange={(event) => setEvalLimit(Number(event.target.value) || 1)} />
+              </label>
+
+              <label className='flex flex-col gap-2 text-sm text-slate-300'>
+                Semilla aleatoria
+                <input className='rounded-xl border border-[#1F2937] bg-[#111827] px-3 py-2 text-white' type='number' value={seed} onChange={(event) => setSeed(Number(event.target.value) || 42)} />
+              </label>
+            </>
+          )}
+
+          {selectionMode === 'ids' && (
+            <label className='flex flex-col gap-2 text-sm text-slate-300 lg:col-span-2'>
+              IDs a enviar separados por coma
+              <textarea
+                className='min-h-[96px] rounded-xl border border-[#1F2937] bg-[#111827] px-3 py-2 text-white'
+                placeholder='Ej: 13, 17, 25'
+                value={idsText}
+                onChange={(event) => setIdsText(event.target.value)}
+              />
+            </label>
+          )}
         </div>
 
         <div>
@@ -121,17 +185,6 @@ export default function LLMJudgeSection({ examples, sessionId }: { examples: Exa
             ))}
           </div>
         </div>
-
-        <label className='flex flex-col gap-2 text-sm text-slate-300'>
-          IDs a enviar separados por coma
-          <textarea
-            className='min-h-[96px] rounded-xl border border-[#1F2937] bg-[#111827] px-3 py-2 text-white'
-            placeholder='Ej: 13, 17, 25'
-            value={idsText}
-            onChange={(event) => setIdsText(event.target.value)}
-            disabled={selectionMode !== 'ids'}
-          />
-        </label>
 
         <div className='flex flex-wrap gap-3'>
           <Button onClick={handleRun} disabled={running || !examples.length}>
@@ -160,6 +213,17 @@ export default function LLMJudgeSection({ examples, sessionId }: { examples: Exa
           </div>
         </Card>
       </div>
+
+      <Card className='p-6'>
+        <h3 className='text-2xl font-bold'>Logs de ejecución</h3>
+        <div className='mt-4 max-h-[260px] overflow-auto rounded-2xl border border-[#1F2937] bg-[#0B1220] p-4 font-mono text-xs leading-6 text-slate-200'>
+          {logs.length ? logs.map((line, index) => (
+            <div key={`${line.kind}-${index}`} className={line.kind === 'error' ? 'text-red-400' : line.kind === 'success' ? 'text-emerald-300' : 'text-slate-200'}>
+              {line.kind === 'error' ? '[ERROR]' : line.kind === 'success' ? '[OK]' : '[INFO]'} {line.text}
+            </div>
+          )) : <div className='text-slate-400'>Sin actividad todavía.</div>}
+        </div>
+      </Card>
 
       <Card className='p-6'>
         <h3 className='text-2xl font-bold'>Resultados</h3>

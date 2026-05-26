@@ -207,7 +207,12 @@ def compute_metrics(example_id: int, sessionId: Optional[str] = Query(None)):
 
 
 @app.post('/api/examples/{example_id}/llm-judge')
-def llm_judge(example_id: int, sessionId: Optional[str] = Query(None), modelKey: str = Query('modelo_1')):
+def llm_judge(
+    example_id: int,
+    sessionId: Optional[str] = Query(None),
+    modelKey: str = Query('modelo_1'),
+    promptMode: str = Query('strict'),
+):
     folder, source = get_session_source(sessionId)
     data = json.loads(source.read_text(encoding='utf-8'))
     by_id = {x['id']: x for x in data}
@@ -217,9 +222,10 @@ def llm_judge(example_id: int, sessionId: Optional[str] = Query(None), modelKey:
     allowed_keys = {'modelo_1', 'modelo_2', 'modelo_3', 'modelo_4'}
     if modelKey not in allowed_keys:
         raise HTTPException(400, 'invalid modelKey')
+    if promptMode not in {'strict', 'flexible'}:
+        raise HTTPException(400, 'invalid promptMode')
 
-    prompt_mode = 'strict'
-    result = evaluate_with_gemini(example, model_key=modelKey, prompt_mode=prompt_mode)
+    result = evaluate_with_gemini(example, model_key=modelKey, prompt_mode=promptMode)
     model_label = {
         'modelo_1': 'Modelo 1',
         'modelo_2': 'Modelo 2',
@@ -231,6 +237,7 @@ def llm_judge(example_id: int, sessionId: Optional[str] = Query(None), modelKey:
         'exampleId': example_id,
         'modelKey': modelKey,
         'modelLabel': model_label,
+        'promptMode': promptMode,
         'llmJudge': result,
     }
     out_dir = folder / 'llm_judge'

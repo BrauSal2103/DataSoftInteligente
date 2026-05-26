@@ -42,6 +42,7 @@ export type LLMJudgeApiResponse = {
   exampleId: number | string;
   modelKey: ModelKey;
   modelLabel: string;
+  promptMode?: 'strict' | 'flexible';
   llmJudge: LLMJudgeResult;
   stored: string;
 };
@@ -66,9 +67,9 @@ export type LLMJudgeBatchResponse = {
   stored: string[];
 };
 
-export const runLLMJudge = async (example: Example, sessionId?: string, modelKey: ModelKey = 'modelo_1') => {
+export const runLLMJudge = async (example: Example, sessionId?: string, modelKey: ModelKey = 'modelo_1', promptMode: 'strict' | 'flexible' = 'strict') => {
   const response = await api.post(`/api/examples/${example.id}/llm-judge`, null, {
-    params: sessionId ? { sessionId, modelKey } : { modelKey },
+    params: sessionId ? { sessionId, modelKey, promptMode } : { modelKey, promptMode },
   });
   return response.data as LLMJudgeApiResponse;
 };

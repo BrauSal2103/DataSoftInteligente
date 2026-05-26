@@ -114,18 +114,41 @@ def _extract_json_from_response(text: str) -> dict[str, Any]:
         return json.loads(cleaned)
     except json.JSONDecodeError:
         start = cleaned.find('{')
-        end = cleaned.rfind('}')
-        if start != -1 and end != -1 and end > start:
-            candidate = cleaned[start:end + 1]
-            try:
-                return json.loads(candidate)
-            except json.JSONDecodeError:
-                candidate = candidate.replace('\n', ' ').replace('\r', ' ')
-                candidate = candidate.replace('“', '"').replace('”', '"').replace("'", '"')
+        if start != -1:
+            depth = 0
+            end = None
+            in_string = False
+            escape_next = False
+            for index, char in enumerate(cleaned[start:], start=start):
+                if escape_next:
+                    escape_next = False
+                    continue
+                if char == '\\' and in_string:
+                    escape_next = True
+                    continue
+                if char == '"':
+                    in_string = not in_string
+                    continue
+                if in_string:
+                    continue
+                if char == '{':
+                    depth += 1
+                elif char == '}':
+                    depth -= 1
+                    if depth == 0:
+                        end = index
+                        break
+            if end is not None and end > start:
+                candidate = cleaned[start:end + 1]
                 try:
                     return json.loads(candidate)
                 except json.JSONDecodeError:
-                    pass
+                    candidate = candidate.replace('\n', ' ').replace('\r', ' ')
+                    candidate = candidate.replace('“', '"').replace('”', '"').replace("'", '"')
+                    try:
+                        return json.loads(candidate)
+                    except json.JSONDecodeError:
+                        pass
         return {
             'score': None,
             'semantic_errors': ['La respuesta de Gemini no pudo convertirse a JSON válido'],
