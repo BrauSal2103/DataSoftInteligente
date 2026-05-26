@@ -8,9 +8,6 @@ __pycache__/
 .vscode/
 
 scatter_correlacion.png
-heatmap_metricas.png
-*.png
-!comparativa_modelos_grouped_bar.png
+
 .ipynb_checkpoints/
 **/ .ipynb_checkpoints/
-!discrepancia_chrf_m2_m4.png
