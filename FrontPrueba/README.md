@@ -51,9 +51,11 @@ id,texto,referencia,modelo_1,modelo_2,modelo_3,modelo_4
 1,"El niño come una manzana","[{""id"":2335,""label"":""niño""}]","2335:niño,7381:comer","2335:niño","2335:niño","2335:niño"
 ```
 
-## Endpoints futuros del backend
-- `POST /api/metrics`
-- `POST /api/llm-judge`
-- `POST /api/human-evaluation`
+## LLM-Judge
 
-> Gemini **no se llama desde frontend**. LLM-Judge queda preparado para ejecutarse vía backend.
+La vista de evaluación incluye un panel de **LLM-Judge Gemini** por ejemplo.
+
+- El usuario selecciona el modelo a evaluar.
+- El frontend llama al backend en `POST /api/examples/{id}/llm-judge`.
+- El backend consulta Gemini con `GEMINI_API_KEY` y devuelve `score`, `semantic_errors`, `missing_concepts` y `comments`.
+- El resultado queda guardado por sesión en `backend/data/{sessionId}/llm_judge/`.

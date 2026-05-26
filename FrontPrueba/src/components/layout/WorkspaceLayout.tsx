@@ -2,7 +2,7 @@ import { ReactNode } from 'react';
 import Header from './Header';
 import Sidebar from './Sidebar';
 
-type Tab = 'Dashboard' | 'BLEU' | 'chrF++' | 'Concept F1' | 'Coverage';
+type Tab = 'Dashboard' | 'BLEU' | 'chrF++' | 'Concept F1' | 'Coverage' | 'LLM Judge';
 
 export default function WorkspaceLayout({ active, onChangeTab, onReset, children }: { active: Tab; onChangeTab: (tab: Tab) => void; onReset: () => void; children: ReactNode }) {
   return (
