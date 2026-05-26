@@ -7,13 +7,14 @@ import ExampleSelector from '../components/evaluation/ExampleSelector';
 import PictogramSequence from '../components/pictograms/PictogramSequence';
 import { MetricSummary } from '../services/evaluationApi';
 
-export type MetricKey = keyof Pick<ModelMetrics, 'bleu' | 'chrf' | 'conceptF1' | 'coverage'>;
+export type MetricKey = keyof Pick<ModelMetrics, 'bleu' | 'chrf' | 'conceptF1' | 'coverage' | 'semanticSimilarity'>;
 
 const metricLabels: Record<MetricKey, string> = {
   bleu: 'BLEU',
   chrf: 'chrF++',
   conceptF1: 'Concept F1',
   coverage: 'Coverage',
+  semanticSimilarity: 'Semantic Similarity',
 };
 
 const metricDescriptions: Record<MetricKey, string> = {
@@ -21,6 +22,7 @@ const metricDescriptions: Record<MetricKey, string> = {
   chrf: 'Similitud a nivel de caracteres con orden de palabras extendido.',
   conceptF1: 'Coincidencia de conceptos pictográficos sin importar el orden.',
   coverage: 'Cobertura de conceptos de referencia presentes en la predicción.',
+  semanticSimilarity: 'Similitud coseno entre el texto original y los pictogramas generados usando embeddings multilingües.',
 };
 
 const colors = ['#EF0015', '#F97316', '#22C55E', '#38BDF8'];

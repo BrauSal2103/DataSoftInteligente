@@ -7,7 +7,7 @@ import MetricSection from '../sections/MetricSection';
 import LLMJudgeSection from '../sections/LLMJudgeSection';
 import { calculateMetrics, getMetricSummary, getProgress } from '../services/evaluationApi';
 
-type Tab = 'Dashboard' | 'BLEU' | 'chrF++' | 'Concept F1' | 'Coverage' | 'LLM Judge';
+type Tab = 'Dashboard' | 'BLEU' | 'chrF++' | 'Concept F1' | 'Coverage' | 'Semantic Similarity' | 'LLM Judge';
 
 export default function EvaluationWorkspace() {
   const navigate = useNavigate();
@@ -59,11 +59,12 @@ export default function EvaluationWorkspace() {
     }
   };
 
-  const metricMap: Record<Exclude<Tab, 'Dashboard'>, 'bleu' | 'chrf' | 'conceptF1' | 'coverage'> = {
+  const metricMap: Record<Exclude<Tab, 'Dashboard'>, 'bleu' | 'chrf' | 'conceptF1' | 'coverage' | 'semanticSimilarity'> = {
     BLEU: 'bleu',
     'chrF++': 'chrf',
     'Concept F1': 'conceptF1',
     Coverage: 'coverage',
+    'Semantic Similarity': 'semanticSimilarity',
     'LLM Judge': 'coverage',
   };
 

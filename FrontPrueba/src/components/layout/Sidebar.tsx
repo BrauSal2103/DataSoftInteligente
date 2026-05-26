@@ -1,6 +1,6 @@
-import { BarChart3, ClipboardCheck, LayoutDashboard, Sigma, ArrowUpCircle, TrendingUp, BrainCircuit } from 'lucide-react';
+import { BarChart3, ClipboardCheck, LayoutDashboard, Sigma, ArrowUpCircle, TrendingUp, BrainCircuit, Sparkles } from 'lucide-react';
 
-type Tab = 'Dashboard' | 'BLEU' | 'chrF++' | 'Concept F1' | 'Coverage' | 'LLM Judge';
+type Tab = 'Dashboard' | 'BLEU' | 'chrF++' | 'Concept F1' | 'Coverage' | 'Semantic Similarity' | 'LLM Judge';
 
 const items: { label: Tab; icon: any }[] = [
   { label: 'Dashboard', icon: LayoutDashboard },
@@ -8,6 +8,7 @@ const items: { label: Tab; icon: any }[] = [
   { label: 'chrF++', icon: BarChart3 },
   { label: 'Concept F1', icon: Sigma },
   { label: 'Coverage', icon: TrendingUp },
+  { label: 'Semantic Similarity', icon: Sparkles },
   { label: 'LLM Judge', icon: BrainCircuit },
 ];
 

@@ -3,3 +3,5 @@ uvicorn[standard]
 sacrebleu
 python-multipart
 requests
+sentence-transformers
+numpy

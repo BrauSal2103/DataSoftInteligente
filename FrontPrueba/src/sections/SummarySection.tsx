@@ -3,7 +3,7 @@ import Card from '../components/ui/Card';
 import Button from '../components/ui/Button';
 import { Example, SessionInfo } from '../types/dataset';
 
-type Tab = 'Dashboard' | 'BLEU' | 'chrF++' | 'Concept F1' | 'Coverage';
+type Tab = 'Dashboard' | 'BLEU' | 'chrF++' | 'Concept F1' | 'Coverage' | 'Semantic Similarity';
 
 export default function SummarySection({ total, evaluated, onGo, examples, session, backendProgress, jsonPreview }: { total: number; evaluated: number; onGo: (tab: Tab) => void; examples: Example[]; session: SessionInfo | null; backendProgress: { total: number; evaluated: number; pending: number; progress: number }; jsonPreview: string }) {
   const pending = total - evaluated;
@@ -57,6 +57,7 @@ export default function SummarySection({ total, evaluated, onGo, examples, sessi
           <Button onClick={() => onGo('chrF++')}>Ver chrF++</Button>
           <Button onClick={() => onGo('Concept F1')}>Revisar Concept F1</Button>
           <Button onClick={() => onGo('Coverage')}>Abrir Coverage</Button>
+          <Button onClick={() => onGo('Semantic Similarity')}>Ver Semantic Similarity</Button>
         </div>
       </Card>
     </div>

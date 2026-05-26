@@ -204,6 +204,76 @@ def coverage_score(hyp_tokens: List[str], ref_tokens: List[str]):
     return covered / len(ref_tokens)
 
 
+# ── Semantic Similarity (lazy-loaded) ─────────────────────────────────────────
+
+_PROJECT_DATA_DIR = Path(__file__).resolve().parents[1] / 'data'
+_SEMANTIC_MODEL = None
+_PICT_LOOKUP = None
+
+
+def _load_pictogram_lookup() -> Dict[str, str]:
+    global _PICT_LOOKUP
+    if _PICT_LOOKUP is not None:
+        return _PICT_LOOKUP
+    path = _PROJECT_DATA_DIR / 'pictogramasArasaac.json'
+    if not path.exists():
+        return {}
+    try:
+        raw = json.loads(path.read_text(encoding='utf-8'))
+        lookup = {}
+        for p in raw:
+            pid = str(p.get('_id'))
+            keywords = p.get('keywords') or []
+            keyword = keywords[0].get('keyword', '').lower() if keywords else ''
+            if keyword and pid:
+                lookup[pid] = keyword
+        _PICT_LOOKUP = lookup
+    except Exception:
+        _PICT_LOOKUP = {}
+    return _PICT_LOOKUP
+
+
+def _get_semantic_model():
+    global _SEMANTIC_MODEL
+    if _SEMANTIC_MODEL is not None:
+        return _SEMANTIC_MODEL
+    try:
+        from sentence_transformers import SentenceTransformer
+        _SEMANTIC_MODEL = SentenceTransformer("paraphrase-multilingual-MiniLM-L12-v2")
+    except Exception:
+        _SEMANTIC_MODEL = None
+    return _SEMANTIC_MODEL
+
+
+def tokens_to_text(token_list: List[str]) -> str:
+    lookup = _load_pictogram_lookup()
+    if not lookup:
+        return ''
+    words = []
+    for tok in token_list:
+        if tok.startswith('pict_'):
+            pid = tok.replace('pict_', '')
+            word = lookup.get(pid)
+            if word:
+                words.append(word)
+    return ' '.join(words) if words else ''
+
+
+def semantic_similarity(oracion: str, hyp_text: str) -> float | None:
+    if not hyp_text or not oracion:
+        return 0.0
+    model = _get_semantic_model()
+    if model is None:
+        return None
+    try:
+        v1 = model.encode([oracion])
+        v2 = model.encode([hyp_text])
+        sim = np.dot(v1, v2.T) / (np.linalg.norm(v1) * np.linalg.norm(v2))
+        return float(sim[0][0] * 100)
+    except Exception:
+        return None
+
+
 def _load_model_records(source_dir: str):
     records = {}
     for filename, key in [
@@ -262,6 +332,7 @@ def compute_session_summary(dataset: List[Dict[str, Any]], model_records: Dict[s
         'chrf': [],
         'conceptF1': [],
         'coverage': [],
+        'semanticSimilarity': [],
     }
 
     for model_key in ['modelo_1', 'modelo_2', 'modelo_3', 'modelo_4']:
@@ -269,6 +340,7 @@ def compute_session_summary(dataset: List[Dict[str, Any]], model_records: Dict[s
         refs = []
         concept_f1_values = []
         coverage_values = []
+        sem_sim_values = []
 
         for example in dataset:
             ref_tokens = _clean_sequence(example.get('traduccion') or example.get('referencia') or example.get('reference') or example.get('referencias'))
@@ -281,6 +353,12 @@ def compute_session_summary(dataset: List[Dict[str, Any]], model_records: Dict[s
             _, _, f1 = concept_precision_recall_f1(hyp_tokens, ref_tokens)
             concept_f1_values.append(f1 * 100)
             coverage_values.append(coverage_score(hyp_tokens, ref_tokens) * 100)
+
+            oracion_val = str(example.get('oracion') or example.get('texto') or example.get('text') or '')
+            hyp_text = tokens_to_text(hyp_tokens)
+            sem_sim = semantic_similarity(oracion_val, hyp_text)
+            if sem_sim is not None:
+                sem_sim_values.append(sem_sim)
 
         try:
             bleu_value = float(bleu_metric.corpus_score(hyps, [refs]).score)
@@ -296,6 +374,7 @@ def compute_session_summary(dataset: List[Dict[str, Any]], model_records: Dict[s
         summary['chrf'].append({'model': model_name, 'value': chrf_value})
         summary['conceptF1'].append({'model': model_name, 'value': round(float(np.mean(concept_f1_values)), 4) if concept_f1_values else 0})
         summary['coverage'].append({'model': model_name, 'value': round(float(np.mean(coverage_values)), 4) if coverage_values else 0})
+        summary['semanticSimilarity'].append({'model': model_name, 'value': round(float(np.mean(sem_sim_values)), 4) if sem_sim_values else 0})
 
     return summary
 
@@ -306,6 +385,7 @@ def compute_example_metrics(example: Dict[str, Any], dataset: List[Dict[str, Any
     models = _example_model_map(example, model_records)
 
     ref_tokens = _clean_sequence(ref)
+    oracion_val = str(example.get('oracion') or example.get('texto') or example.get('text') or '')
 
     bleu_s = BLEU(effective_order=True)
     chrf_s = CHRF(word_order=2)
@@ -325,11 +405,14 @@ def compute_example_metrics(example: Dict[str, Any], dataset: List[Dict[str, Any
             chrf_val = None
         p, r, f1 = concept_precision_recall_f1(hyp_tokens, ref_tokens)
         cov = coverage_score(hyp_tokens, ref_tokens)
+        hyp_text = tokens_to_text(hyp_tokens)
+        sem_sim = semantic_similarity(oracion_val, hyp_text)
         results[name] = {
             'bleu': bleu_val,
             'chrf': chrf_val,
             'conceptF1': round(f1 * 100, 4),
             'coverage': round(cov * 100, 4),
+            'semanticSimilarity': round(sem_sim, 4) if sem_sim is not None else None,
         }
     return results
 
