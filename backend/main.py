@@ -215,6 +215,7 @@ def llm_judge(
 ):
     folder, source = get_session_source(sessionId)
     data = json.loads(source.read_text(encoding='utf-8'))
+    model_records = get_model_bundle(folder)
     by_id = {x['id']: x for x in data}
     if example_id not in by_id:
         raise HTTPException(404, 'example id not found')
@@ -225,7 +226,7 @@ def llm_judge(
     if promptMode not in {'strict', 'flexible'}:
         raise HTTPException(400, 'invalid promptMode')
 
-    result = evaluate_with_gemini(example, model_key=modelKey, prompt_mode=promptMode)
+    result = evaluate_with_gemini(example, model_records=model_records, model_key=modelKey, prompt_mode=promptMode)
     model_label = {
         'modelo_1': 'Modelo 1',
         'modelo_2': 'Modelo 2',
@@ -251,6 +252,7 @@ def llm_judge(
 def llm_judge_batch(body: LLMJudgeBatchRequest, sessionId: Optional[str] = Query(None)):
     folder, source = get_session_source(sessionId)
     data = json.loads(source.read_text(encoding='utf-8'))
+    model_records = get_model_bundle(folder)
     by_id = {x['id']: x for x in data}
     allowed_keys = {'modelo_1', 'modelo_2', 'modelo_3', 'modelo_4'}
     if body.modelKey not in allowed_keys:
@@ -271,7 +273,13 @@ def llm_judge_batch(body: LLMJudgeBatchRequest, sessionId: Optional[str] = Query
         selected_ids = rng.sample(available_ids, k=min(body.evalLimit, len(available_ids)))
 
     selected_ids = selected_ids[: body.evalLimit]
-    results = evaluate_batch_with_gemini(data, selected_ids, model_key=body.modelKey, prompt_mode=body.promptMode)
+    results = evaluate_batch_with_gemini(
+        data,
+        selected_ids,
+        model_records=model_records,
+        model_key=body.modelKey,
+        prompt_mode=body.promptMode,
+    )
 
     out_dir = folder / 'llm_judge'
     out_dir.mkdir(parents=True, exist_ok=True)

@@ -36,6 +36,15 @@ export default function LLMJudgeSection({ examples, sessionId }: { examples: Exa
   const [logs, setLogs] = useState<LogLine[]>([{ kind: 'info', text: 'Listo para ejecutar LLM-Judge.' }]);
 
   const availableIds = useMemo(() => examples.map((example) => example.id), [examples]);
+  const parsedIds = useMemo(
+    () => idsText
+      .split(',')
+      .map((value) => value.trim())
+      .filter(Boolean)
+      .map((value) => (Number.isNaN(Number(value)) ? value : Number(value))),
+    [idsText],
+  );
+  const plannedRecords = selectionMode === 'ids' ? parsedIds.length : Math.max(1, Math.min(evalLimit, availableIds.length));
 
   const appendLog = (line: LogLine) => {
     setLogs((previous) => [...previous, line]);
@@ -48,13 +57,6 @@ export default function LLMJudgeSection({ examples, sessionId }: { examples: Exa
       return;
     }
 
-    const maxRecords = Math.max(1, Math.min(evalLimit, availableIds.length));
-    const parsedIds = idsText
-      .split(',')
-      .map((value) => value.trim())
-      .filter(Boolean)
-      .map((value) => (Number.isNaN(Number(value)) ? value : Number(value)));
-
     setRunning(true);
     setSelectedIds([]);
     setResults([]);
@@ -62,16 +64,16 @@ export default function LLMJudgeSection({ examples, sessionId }: { examples: Exa
       { kind: 'info', text: `Modelo seleccionado: ${modelOptions.find((item) => item.key === modelKey)?.label ?? modelKey}` },
       { kind: 'info', text: `Prompt: ${promptMode === 'strict' ? 'Estricto' : 'Flexible'}` },
       { kind: 'info', text: `Modo de selección: ${selectionMode === 'random' ? 'Aleatorio' : 'IDs específicos'}` },
-      { kind: 'info', text: `Cantidad solicitada: ${maxRecords}` },
+      { kind: 'info', text: `Cantidad solicitada: ${plannedRecords}` },
     ]);
     setStatus('Preparando lote...');
     try {
       const selected = selectionMode === 'ids'
-        ? parsedIds.filter((id) => availableIds.some((availableId) => String(availableId) === String(id))).slice(0, maxRecords)
+        ? parsedIds.filter((id) => availableIds.some((availableId) => String(availableId) === String(id)))
         : [...availableIds]
             .map((id) => ({ id, random: Math.random() }))
             .sort((left, right) => left.random - right.random)
-            .slice(0, maxRecords)
+            .slice(0, plannedRecords)
             .map((item) => item.id);
 
       if (!selected.length) {
@@ -209,7 +211,7 @@ export default function LLMJudgeSection({ examples, sessionId }: { examples: Exa
             <p><b>Modelo:</b> {modelOptions.find((item) => item.key === modelKey)?.label}</p>
             <p><b>Prompt:</b> {promptMode === 'strict' ? 'Estricto' : 'Flexible'}</p>
             <p><b>Modo de selección:</b> {selectionMode === 'random' ? 'Aleatorio' : 'IDs específicos'}</p>
-            <p><b>Registros:</b> {evalLimit}</p>
+            <p><b>Registros:</b> {plannedRecords}</p>
           </div>
         </Card>
       </div>

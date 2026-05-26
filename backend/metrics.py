@@ -334,11 +334,16 @@ def compute_example_metrics(example: Dict[str, Any], dataset: List[Dict[str, Any
     return results
 
 
-def evaluate_with_gemini(example: Dict[str, Any], model_key: str = 'modelo_1', prompt_mode: str = 'strict'):
+def evaluate_with_gemini(
+    example: Dict[str, Any],
+    model_records: Dict[str, Dict[str, str]] | None = None,
+    model_key: str = 'modelo_1',
+    prompt_mode: str = 'strict',
+):
     model_key = model_key if model_key in MODEL_LABELS else 'modelo_1'
     model_label = MODEL_LABELS[model_key]
     text_original = _example_text(example)
-    model_map = _available_model_keys(example)
+    model_map = _example_model_map(example, model_records) if model_records else _available_model_keys(example)
     prediction_tokens = _clean_sequence(model_map.get(model_key))
     prediction_text = ' '.join(prediction_tokens)
 
@@ -403,18 +408,25 @@ def evaluate_with_gemini(example: Dict[str, Any], model_key: str = 'modelo_1', p
     }
 
 
-def evaluate_batch_with_gemini(dataset: List[Dict[str, Any]], ids: List[int], model_key: str = 'modelo_1', prompt_mode: str = 'strict'):
+def evaluate_batch_with_gemini(
+    dataset: List[Dict[str, Any]],
+    ids: List[int],
+    model_records: Dict[str, Dict[str, str]] | None = None,
+    model_key: str = 'modelo_1',
+    prompt_mode: str = 'strict',
+):
     results = []
     by_id = {x.get('id'): x for x in dataset}
     for example_id in ids:
         example = by_id.get(example_id)
         if not example:
             continue
-        judge = evaluate_with_gemini(example, model_key=model_key, prompt_mode=prompt_mode)
+        judge = evaluate_with_gemini(example, model_records=model_records, model_key=model_key, prompt_mode=prompt_mode)
+        model_map = _example_model_map(example, model_records)
         results.append({
             'id': example_id,
             'texto': _example_text(example),
-            'prediction': ' '.join(_clean_sequence(_available_model_keys(example).get(model_key))),
+            'prediction': ' '.join(_clean_sequence(model_map.get(model_key))),
             'llmJudge': judge,
         })
     return results
