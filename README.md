@@ -85,3 +85,26 @@ La API key se obtiene desde Google AI Studio.
 - Jhan Reyes Fabian 
 - Braulio Salda¤a Alarcon 
 - Andrew Serna Quiroz 
+ 
+## Integrantes 
+- Sebasti n Ayala Alberca 
+- Joshua Barrantes Navarro 
+- Diego Gamarra Chavez 
+- Jhan Reyes Fabian 
+- Braulio Salda¤a Alarcon 
+- Andrew Serna Quiroz 
+ 
+## Tecnolog¡as utilizadas 
+- Python 3.12 
+- FastAPI + Uvicorn 
+- React + TypeScript + Vite 
+- Sentence Transformers (all-MiniLM-L6-v2) 
+- SacreBleu (BLEU, chrF++) 
+- Google Gemini API (LLM-Judge) 
+- Corpus PICTOEDUCA (MINEDU Peru) 
+ 
+## Resultados principales 
+- LLM-Judge flexible: correlacion Spearman p=0.68 con juicio humano 
+- BLEU: correlacion r=0.27 (metrica insuficiente para CAA) 
+- Similitud Semantica: correlacion r=0.50 
+- 8 evaluadores humanos, 50 ejemplos, 4 modelos evaluados 
