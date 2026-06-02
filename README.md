@@ -78,4 +78,10 @@ La API key se obtiene desde Google AI Studio.
 ## Notas
 
 - El frontend consume por defecto el backend en `http://localhost:8000`.
-- Si quieres cambiar esa URL, define `VITE_API_BASE_URL` en el frontend.
+- Si quieres cambiar esa URL, define `VITE_API_BASE_URL` en el frontend.## Integrantes 
+- Sebasti n Ayala Alberca 
+- Joshua Barrantes Navarro 
+- Diego Gamarra Chavez 
+- Jhan Reyes Fabian 
+- Braulio Salda¤a Alarcon 
+- Andrew Serna Quiroz 
