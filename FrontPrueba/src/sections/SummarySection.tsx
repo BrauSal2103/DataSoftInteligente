@@ -21,8 +21,8 @@ export default function SummarySection({ total, evaluated, onGo, examples, sessi
 
   return (
     <div className='space-y-6'>
-      <h1 className='text-6xl font-bold'>Dashboard</h1>
-      <p className='text-3xl text-slate-300'>Visión general del proyecto de evaluación</p>
+      <h1 className='text-4xl font-bold sm:text-6xl'>Dashboard</h1>
+      <p className='text-xl text-slate-300 sm:text-3xl'>Visión general del proyecto de evaluación</p>
       <Card className='grid gap-4 md:grid-cols-3'>
         <div>
           <p className='text-slate-400'>Sesión activa</p>
@@ -49,13 +49,13 @@ export default function SummarySection({ total, evaluated, onGo, examples, sessi
       <div className='grid grid-cols-1 gap-4 xl:grid-cols-2'>
         {stats.map(({ label, value, icon: Icon }) => (
           <Card key={label} className='flex items-center justify-between p-6'>
-            <div><p className='text-xl text-slate-300'>{label}</p><p className='mt-2 text-6xl font-bold'>{value}</p></div>
+            <div><p className='text-lg text-slate-300 sm:text-xl'>{label}</p><p className='mt-2 text-4xl font-bold sm:text-6xl'>{value}</p></div>
             <div className='rounded-2xl bg-[#EF0015] p-4'><Icon size={28} /></div>
           </Card>
         ))}
       </div>
       <Card className='p-6'>
-        <h3 className='text-4xl font-bold'>Acciones rápidas</h3>
+        <h3 className='text-3xl font-bold sm:text-4xl'>Acciones rápidas</h3>
         <div className='mt-4 flex flex-wrap gap-3'>
           <Button onClick={() => onGo('BLEU')}>Ir a BLEU</Button>
           <Button onClick={() => onGo('chrF++')}>Ver chrF++</Button>

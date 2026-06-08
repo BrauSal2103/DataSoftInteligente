@@ -79,8 +79,8 @@ export default function MetricSection({
     <div className='space-y-4'>
       <div className='flex flex-wrap items-end justify-between gap-4'>
         <div>
-          <h1 className='text-5xl font-bold'>{metricLabels[metricKey]}</h1>
-          <p className='mt-2 text-2xl text-slate-300'>{metricDescriptions[metricKey]}</p>
+          <h1 className='text-4xl font-bold sm:text-5xl'>{metricLabels[metricKey]}</h1>
+          <p className='mt-2 text-lg text-slate-300 sm:text-2xl'>{metricDescriptions[metricKey]}</p>
         </div>
         <div className='text-right text-sm text-slate-400'>
           <p>Sesión: {session?.sessionId ?? 'sin sesión'}</p>
@@ -139,7 +139,7 @@ export default function MetricSection({
         <div className='space-y-4'>
           <Card className='p-5'>
             <h3 className='text-xl font-bold text-slate-300'>TEXTO ORIGINAL</h3>
-            <p className='mt-3 text-4xl'>{example?.texto ?? '—'}</p>
+            <p className='mt-3 text-2xl sm:text-4xl'>{example?.texto ?? '—'}</p>
           </Card>
 
           <Card className='p-5'>

@@ -87,6 +87,17 @@ No agregues texto introductorio ni explicaciones fuera del JSON.
 """
 
 
+def _normalize_token(token: Any) -> str:
+    value = str(token or '').strip()
+    if not value:
+        return ''
+    if value.startswith('pict_'):
+        return value
+    if value.isdigit():
+        return f'pict_{value}'
+    return value
+
+
 def _clean_sequence(seq) -> List[str]:
     if not seq:
         return []
@@ -95,12 +106,12 @@ def _clean_sequence(seq) -> List[str]:
         out = []
         for v in seq:
             if isinstance(v, dict):
-                out.append(str(v.get('id') or v.get('label') or ''))
+                out.append(_normalize_token(v.get('id') or v.get('label')))
             else:
-                out.append(str(v))
+                out.append(_normalize_token(v))
         return [t for t in out if t]
     if isinstance(seq, str):
-        return [t for t in seq.strip().split() if t]
+        return [t for t in (_normalize_token(token) for token in seq.strip().split()) if t]
     return []
 
 

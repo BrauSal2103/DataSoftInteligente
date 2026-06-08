@@ -1,0 +1,82 @@
+[
+  {
+    "id": 1,
+    "texto": "El niño come una manzana",
+    "referencia": [
+      { "id": 2335, "label": "niño" },
+      { "id": 2319, "label": "comer" },
+      { "id": 2618, "label": "manzana" }
+    ],
+    "modelo_1": [
+      { "id": 2335, "label": "niño" },
+      { "id": 2319, "label": "comer" }
+    ],
+    "modelo_2": [
+      { "id": 2335, "label": "niño" },
+      { "id": 2319, "label": "comer" },
+      { "id": 2618, "label": "manzana" }
+    ],
+    "modelo_3": [
+      { "id": 2335, "label": "niño" },
+      { "id": 2319, "label": "comer" },
+      { "id": 2600, "label": "fruta" }
+    ],
+    "modelo_4": [
+      { "id": 2335, "label": "niño" },
+      { "id": 2618, "label": "manzana" }
+    ]
+  },
+  {
+    "id": 2,
+    "texto": "La niña bebe agua",
+    "referencia": [
+      { "id": 2551, "label": "niña" },
+      { "id": 3080, "label": "beber" },
+      { "id": 2457, "label": "agua" }
+    ],
+    "modelo_1": [
+      { "id": 2551, "label": "niña" },
+      { "id": 3080, "label": "beber" }
+    ],
+    "modelo_2": [
+      { "id": 2551, "label": "niña" },
+      { "id": 3080, "label": "beber" },
+      { "id": 2457, "label": "agua" }
+    ],
+    "modelo_3": [
+      { "id": 2335, "label": "niño" },
+      { "id": 3080, "label": "beber" },
+      { "id": 2457, "label": "agua" }
+    ],
+    "modelo_4": [
+      { "id": 2551, "label": "niña" },
+      { "id": 2457, "label": "agua" }
+    ]
+  },
+  {
+    "id": 3,
+    "texto": "El perro duerme en la casa",
+    "referencia": [
+      { "id": 2625, "label": "perro" },
+      { "id": 3215, "label": "dormir" },
+      { "id": 2439, "label": "casa" }
+    ],
+    "modelo_1": [
+      { "id": 2625, "label": "perro" },
+      { "id": 3215, "label": "dormir" }
+    ],
+    "modelo_2": [
+      { "id": 2625, "label": "perro" },
+      { "id": 3215, "label": "dormir" },
+      { "id": 2439, "label": "casa" }
+    ],
+    "modelo_3": [
+      { "id": 2625, "label": "perro" },
+      { "id": 2439, "label": "casa" }
+    ],
+    "modelo_4": [
+      { "id": 3215, "label": "dormir" },
+      { "id": 2439, "label": "casa" }
+    ]
+  }
+]
