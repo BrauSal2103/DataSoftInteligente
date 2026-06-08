@@ -1,11 +1,13 @@
 import { useMemo, useState } from 'react';
 import { Bar, BarChart, CartesianGrid, Cell, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
-import { Example, ModelMetrics, SessionInfo } from '../types/dataset';
+import { Example, HumanEvaluation, ModelMetrics, SessionInfo } from '../types/dataset';
 import Button from '../components/ui/Button';
 import Card from '../components/ui/Card';
 import ExampleSelector from '../components/evaluation/ExampleSelector';
 import PictogramSequence from '../components/pictograms/PictogramSequence';
 import { MetricSummary } from '../services/evaluationApi';
+import HumanEvaluationForm from '../components/evaluation/HumanEvaluationForm';
+import ModelComparisonPanel from '../components/evaluation/ModelComparisonPanel';
 
 export type MetricKey = keyof Pick<ModelMetrics, 'bleu' | 'chrf' | 'conceptF1' | 'coverage' | 'semanticSimilarity'>;
 
@@ -36,6 +38,8 @@ export default function MetricSection({
   running,
   session,
   summary,
+  humanEvaluations,
+  onHumanEvaluationSaved,
 }: {
   metricKey: MetricKey;
   examples: Example[];
@@ -45,15 +49,15 @@ export default function MetricSection({
   running: boolean;
   session: SessionInfo | null;
   summary: MetricSummary | null;
+  humanEvaluations: HumanEvaluation[];
+  onHumanEvaluationSaved: (evaluation: HumanEvaluation) => void;
 }) {
   const [message, setMessage] = useState('');
   const example = examples[currentIndex];
 
+  const summaryData = useMemo(() => (summary?.[metricKey] ?? []).map((item) => ({ name: item.model, value: item.value })), [metricKey, summary]);
+
   const chartData = useMemo(() => {
-    const currentSummary = summary?.[metricKey] ?? [];
-    if (currentSummary.length) {
-      return currentSummary.map((item) => ({ name: item.model, value: item.value ?? 0 }));
-    }
     const metrics = example?.metrics ?? {};
     return [
       { name: 'Modelo 1', value: metrics.modelo_1?.[metricKey] ?? 0 },
@@ -61,9 +65,10 @@ export default function MetricSection({
       { name: 'Modelo 3', value: metrics.modelo_3?.[metricKey] ?? 0 },
       { name: 'Modelo 4', value: metrics.modelo_4?.[metricKey] ?? 0 },
     ];
-  }, [example, metricKey, summary]);
+  }, [example, metricKey]);
 
   const valuesReady = chartData.some((item) => item.value !== 0);
+  const summaryReady = summaryData.some((item) => item.value !== null && item.value !== 0);
   const formatValue = (value: number) => {
     if (!Number.isFinite(value)) return '—';
     if (value === 0) return '0';
@@ -113,15 +118,15 @@ export default function MetricSection({
       <Card className='p-5'>
         <h3 className='text-xl font-bold text-slate-300'>RESUMEN AGREGADO DE LA SESIÓN</h3>
         <p className='mt-2 text-sm text-slate-400'>Este bloque replica el resultado que muestra el notebook para la métrica seleccionada.</p>
-        {!valuesReady && <p className='mt-3 rounded-lg border border-[#374151] bg-[#111827] p-3 text-sm text-slate-300'>Todavía no hay resultados para esta métrica. Pulsa <b>Iniciar</b> para calcularlos.</p>}
+        {!summaryReady && <p className='mt-3 rounded-lg border border-[#374151] bg-[#111827] p-3 text-sm text-slate-300'>Todavía no hay resultados para esta métrica. Pulsa <b>Iniciar</b> para calcularlos.</p>}
         <div className='mt-4 overflow-x-auto'>
           <table className='w-full text-left text-sm'>
             <thead><tr className='text-slate-300'><th>Modelo</th><th>Resultado</th><th>Lectura notebook</th></tr></thead>
             <tbody>
-              {chartData.map((row) => (
+              {(summaryData.length ? summaryData : chartData).map((row) => (
                 <tr key={row.name} className='border-t border-[#1F2937]'>
                   <td className='py-2'>{row.name}</td>
-                  <td>{formatValue(row.value)}</td>
+                  <td>{row.value === null ? '—' : formatValue(row.value)}</td>
                   <td>{metricKey === 'bleu' || metricKey === 'chrf' ? 'corpus_score' : 'promedio por ejemplo'}</td>
                 </tr>
               ))}
@@ -162,23 +167,9 @@ export default function MetricSection({
         </Card>
       </div>
 
-      <Card className='p-5'>
-        <h3 className='text-xl font-bold text-slate-300'>VALORES POR MODELO</h3>
-        <div className='mt-3 overflow-x-auto'>
-          <table className='w-full text-left text-sm'>
-            <thead><tr className='text-slate-300'><th>Modelo</th><th>Valor</th><th>Estado</th></tr></thead>
-            <tbody>
-              {chartData.map((row) => (
-                <tr key={row.name} className='border-t border-[#1F2937]'>
-                  <td className='py-2'>{row.name}</td>
-                  <td>{row.value ? row.value.toFixed(2) : '—'}</td>
-                  <td>{row.value ? 'Procesado' : 'Pendiente'}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      </Card>
+      {example && <ModelComparisonPanel example={example} humanEvaluations={humanEvaluations} />}
+
+      {example && <HumanEvaluationForm exampleId={example.id} session={session} onSaved={onHumanEvaluationSaved} />}
     </div>
   );
 }

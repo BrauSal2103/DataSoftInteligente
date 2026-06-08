@@ -1,11 +1,12 @@
 import { BarChart3, CheckCircle2, Clock3, TrendingUp } from 'lucide-react';
 import Card from '../components/ui/Card';
 import Button from '../components/ui/Button';
-import { Example, SessionInfo } from '../types/dataset';
+import { Example, HumanEvaluation, SessionInfo } from '../types/dataset';
+import ResultsSection from './ResultsSection';
 
 type Tab = 'Dashboard' | 'BLEU' | 'chrF++' | 'Concept F1' | 'Coverage' | 'Semantic Similarity';
 
-export default function SummarySection({ total, evaluated, onGo, examples, session, backendProgress, jsonPreview }: { total: number; evaluated: number; onGo: (tab: Tab) => void; examples: Example[]; session: SessionInfo | null; backendProgress: { total: number; evaluated: number; pending: number; progress: number }; jsonPreview: string }) {
+export default function SummarySection({ total, evaluated, onGo, examples, session, backendProgress, jsonPreview, humanEvaluations }: { total: number; evaluated: number; onGo: (tab: Tab) => void; examples: Example[]; session: SessionInfo | null; backendProgress: { total: number; evaluated: number; pending: number; progress: number; evaluatedHumanCount?: number; pendingHumanCount?: number; humanProgress?: number }; jsonPreview: string; humanEvaluations: HumanEvaluation[] }) {
   const pending = total - evaluated;
   const progress = backendProgress.total ? backendProgress.progress : (total ? Math.round((evaluated / total) * 100) : 0);
   const stats = [
@@ -13,6 +14,9 @@ export default function SummarySection({ total, evaluated, onGo, examples, sessi
     { label: 'Evaluados', value: evaluated, icon: CheckCircle2 },
     { label: 'Pendientes', value: pending, icon: Clock3 },
     { label: 'Progreso', value: `${progress}%`, icon: TrendingUp },
+    { label: 'Evaluaciones humanas realizadas', value: backendProgress.evaluatedHumanCount ?? humanEvaluations.length, icon: CheckCircle2 },
+    { label: 'Evaluaciones humanas pendientes', value: backendProgress.pendingHumanCount ?? Math.max(total * 4 - humanEvaluations.length, 0), icon: Clock3 },
+    { label: 'Progreso humano', value: `${backendProgress.humanProgress ?? (total ? Math.round((humanEvaluations.length / (total * 4)) * 100) : 0)}%`, icon: TrendingUp },
   ];
 
   return (
@@ -60,6 +64,7 @@ export default function SummarySection({ total, evaluated, onGo, examples, sessi
           <Button onClick={() => onGo('Semantic Similarity')}>Ver Semantic Similarity</Button>
         </div>
       </Card>
+      <ResultsSection humanEvaluations={humanEvaluations} />
     </div>
   );
 }

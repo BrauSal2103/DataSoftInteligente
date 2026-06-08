@@ -6,13 +6,13 @@ import DatasetUploader from '../components/dataset/DatasetUploader';
 import { readDatasetFile } from '../services/datasetApi';
 import { useDataset } from '../context/DatasetContext';
 import { computeFileHash, getStoredSessionByHash, rememberSession } from '../utils/datasetSession';
-import { getExamples, uploadDataset } from '../services/evaluationApi';
+import { getExamples, getHumanEvaluations, uploadDataset } from '../services/evaluationApi';
 
 export default function WelcomePage() {
 	const [file, setFile] = useState<File | null>(null);
 	const [status, setStatus] = useState('Esperando archivo');
 	const navigate = useNavigate();
-	const { setDataset } = useDataset();
+	const { setDataset, setHumanEvaluations } = useDataset();
 
 	const upload = async () => {
 		if (!file) return;
@@ -30,7 +30,9 @@ export default function WelcomePage() {
 			setStatus('Recuperando sesión previa...');
 			try {
 				const examples = await getExamples(existing.sessionId);
+				const human = await getHumanEvaluations(existing.sessionId);
 				setDataset(examples, existing);
+				setHumanEvaluations(human.evaluations);
 				rememberSession(existing);
 				navigate('/workspace');
 				return;
@@ -46,7 +48,9 @@ export default function WelcomePage() {
 			const uploaded = await uploadDataset(file);
 			const session = { sessionId: uploaded.sessionId, sourceHash, filename: file.name };
 			const examples = await getExamples(session.sessionId);
+			const human = await getHumanEvaluations(session.sessionId);
 			setDataset(examples, session);
+			setHumanEvaluations(human.evaluations);
 			rememberSession(session);
 			setStatus(`Dataset cargado correctamente (${uploaded.examplesCount} ejemplos)`);
 			navigate('/workspace');
