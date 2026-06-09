@@ -22,7 +22,7 @@ En PowerShell:
 Si el entorno virtual no existe todavía, créalo una sola vez desde la raíz del proyecto:
 
 ```powershell
-python -m venv venv
+py -m venv venv
 ```
 
 ### 3. Instalar dependencias del backend
