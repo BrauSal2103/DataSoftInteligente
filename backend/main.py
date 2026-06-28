@@ -9,9 +9,11 @@ from pathlib import Path
 from typing import Optional
 
 try:
-    from .metrics import compute_example_metrics, compute_session_summary, evaluate_with_gemini, evaluate_batch_with_gemini, _load_model_records
+    from .metrics import compute_example_metrics, compute_session_summary, evaluate_with_gemini, evaluate_batch_with_gemini, _load_model_records, _load_pictogram_lookup
+    from .utils.human_evaluations import MODEL_KEYS, load_all_human_evaluations, load_human_evaluation, save_human_evaluation
 except ImportError:
-    from metrics import compute_example_metrics, compute_session_summary, evaluate_with_gemini, evaluate_batch_with_gemini, _load_model_records
+    from metrics import compute_example_metrics, compute_session_summary, evaluate_with_gemini, evaluate_batch_with_gemini, _load_model_records, _load_pictogram_lookup
+    from utils.human_evaluations import MODEL_KEYS, load_all_human_evaluations, load_human_evaluation, save_human_evaluation
 
 ROOT = Path(__file__).resolve().parents[1]
 DATA_DIR = ROOT / 'data'
@@ -60,7 +62,12 @@ def get_session_source(session_id: Optional[str]) -> tuple[Path, Path]:
 
 
 def get_model_bundle(folder: Path) -> dict:
-    return _load_model_records(str(folder)) or _load_model_records(str(DATA_DIR))
+    session_models = _load_model_records(str(folder))
+    if session_models:
+        return session_models
+    if folder.name == 'default':
+        return _load_model_records(str(DATA_DIR))
+    return {}
 
 
 class LLMJudgeBatchRequest(BaseModel):
@@ -70,6 +77,14 @@ class LLMJudgeBatchRequest(BaseModel):
     evalLimit: int = Field(default=5, ge=1)
     ids: list[int] = Field(default_factory=list)
     seed: int = Field(default=42)
+
+
+class HumanEvaluationRequest(BaseModel):
+    sessionId: str = Field(min_length=1)
+    modelKey: str = Field(min_length=1)
+    semanticScore: int = Field(ge=1, le=5)
+    clarityScore: int = Field(ge=1, le=5)
+    comment: str = Field(default='')
 
 
 def _normalize_llm_cache_entry(payload: object) -> object:
@@ -133,8 +148,16 @@ def get_examples(sessionId: Optional[str] = Query(None)):
         if isinstance(s, list):
             return s
         if isinstance(s, str):
+            pictogram_lookup = _load_pictogram_lookup()
             toks = s.strip().split()
-            return [{'id': t, 'label': t} for t in toks if t]
+            out = []
+            for token in toks:
+                if not token:
+                    continue
+                picto_id = token.replace('pict_', '') if token.startswith('pict_') else token
+                label = pictogram_lookup.get(picto_id, token)
+                out.append({'id': picto_id, 'label': label})
+            return out
         return []
 
     # helper to get model predictions from model_records or inline fields
@@ -314,6 +337,54 @@ def llm_judge_batch(body: LLMJudgeBatchRequest, sessionId: Optional[str] = Query
     })
 
 
+@app.post('/api/examples/{example_id}/human-evaluation')
+def save_example_human_evaluation(example_id: str, body: HumanEvaluationRequest):
+    if body.modelKey not in MODEL_KEYS:
+        raise HTTPException(400, 'invalid modelKey')
+
+    folder, source = get_session_source(body.sessionId)
+    data = json.loads(source.read_text(encoding='utf-8'))
+    by_id = {str(x.get('id')): x for x in data}
+    if str(example_id) not in by_id:
+        raise HTTPException(404, 'example id not found')
+    stored_example_id = by_id[str(example_id)].get('id')
+
+    payload, updated = save_human_evaluation(
+        body.sessionId,
+        stored_example_id,
+        body.modelKey,
+        {
+            'semanticScore': body.semanticScore,
+            'clarityScore': body.clarityScore,
+            'comment': body.comment,
+        },
+    )
+    message = 'Evaluación humana actualizada correctamente' if updated else 'Evaluación humana guardada correctamente'
+    return JSONResponse({'success': True, 'message': message, 'evaluation': payload, 'stored': str(folder / 'human_evaluations' / f'example_{stored_example_id}_{body.modelKey}.json')})
+
+
+@app.get('/api/human-evaluations')
+def get_human_evaluations(sessionId: str = Query(...)):
+    get_session_source(sessionId)
+    evaluations = load_all_human_evaluations(sessionId)
+    return JSONResponse({'success': True, 'sessionId': sessionId, 'total': len(evaluations), 'evaluations': evaluations})
+
+
+@app.get('/api/examples/{example_id}/human-evaluation')
+def get_example_human_evaluation(example_id: str, sessionId: str = Query(...), modelKey: str = Query(...)):
+    if modelKey not in MODEL_KEYS:
+        raise HTTPException(400, 'invalid modelKey')
+    _, source = get_session_source(sessionId)
+    data = json.loads(source.read_text(encoding='utf-8'))
+    by_id = {str(x.get('id')): x for x in data}
+    if str(example_id) not in by_id:
+        raise HTTPException(404, 'example id not found')
+    evaluation = load_human_evaluation(sessionId, example_id, modelKey)
+    if not evaluation:
+        return JSONResponse({'success': True, 'sessionId': sessionId, 'exampleId': example_id, 'modelKey': modelKey, 'evaluation': None, 'message': 'No existe evaluación humana para este ejemplo y modelo'})
+    return JSONResponse({'success': True, 'sessionId': sessionId, 'exampleId': example_id, 'modelKey': modelKey, 'evaluation': evaluation})
+
+
 @app.get('/api/progress')
 def progress(sessionId: Optional[str] = Query(None)):
     folder, source = get_session_source(sessionId)
@@ -330,7 +401,22 @@ def progress(sessionId: Optional[str] = Query(None)):
         evaluated = len(list(metrics_dir.glob('example_*.json')))
     pending = total - evaluated
     progress = int((evaluated / total) * 100) if total else 0
-    return JSONResponse({'total': total, 'evaluated': evaluated, 'pending': pending, 'progress': progress})
+    effective_session_id = sessionId or 'default'
+    evaluated_human_count = len(load_all_human_evaluations(effective_session_id)) if sessionId else 0
+    total_model_evaluations = total * 4
+    pending_human_count = max(total_model_evaluations - evaluated_human_count, 0)
+    human_progress = int((evaluated_human_count / total_model_evaluations) * 100) if total_model_evaluations else 0
+    return JSONResponse({
+        'total': total,
+        'evaluated': evaluated,
+        'pending': pending,
+        'progress': progress,
+        'totalExamples': total,
+        'totalModelEvaluations': total_model_evaluations,
+        'evaluatedHumanCount': evaluated_human_count,
+        'pendingHumanCount': pending_human_count,
+        'humanProgress': human_progress,
+    })
 
 
 if __name__ == '__main__':

@@ -17,11 +17,11 @@ export default function MetricsPanel({ example, onCalc }: { example: Example; on
       <h3 className='text-2xl font-bold'>MÉTRICAS AUTOMÁTICAS</h3>
       <div className='mt-3 overflow-x-auto'>
         <table className='w-full text-sm'>
-          <thead className='text-slate-300'><tr><th className='text-left'>Modelo</th><th>BLEU</th><th>chrF++</th><th>Concept F1</th><th>Coverage</th></tr></thead>
+          <thead className='text-slate-300'><tr><th className='text-left'>Modelo</th><th>BLEU</th><th>chrF++</th><th>Concept F1</th><th>Coverage</th><th>Sem. Sim.</th></tr></thead>
           <tbody>
             {rows.map((r) => {
               const m = example.metrics?.[r.key];
-              return <tr key={r.key} className='border-t border-[#1F2937]'><td className='py-2'>{r.label}</td><td className='text-center'>{m?.bleu ?? '—'}</td><td className='text-center'>{m?.chrf ?? '—'}</td><td className='text-center'>{m?.conceptF1 ?? '—'}</td><td className='text-center'>{m?.coverage ?? '—'}</td></tr>;
+              return <tr key={r.key} className='border-t border-[#1F2937]'><td className='py-2'>{r.label}</td><td className='text-center'>{m?.bleu ?? '—'}</td><td className='text-center'>{m?.chrf ?? '—'}</td><td className='text-center'>{m?.conceptF1 ?? '—'}</td><td className='text-center'>{m?.coverage ?? '—'}</td><td className='text-center'>{m?.semanticSimilarity ?? '—'}</td></tr>;
             })}
           </tbody>
         </table>

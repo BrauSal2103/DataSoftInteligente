@@ -5,9 +5,9 @@ import WorkspaceLayout from '../components/layout/WorkspaceLayout';
 import SummarySection from '../sections/SummarySection';
 import MetricSection from '../sections/MetricSection';
 import LLMJudgeSection from '../sections/LLMJudgeSection';
-import { calculateMetrics, getMetricSummary, getProgress } from '../services/evaluationApi';
+import { calculateMetrics, getHumanEvaluations, getMetricSummary, getProgress } from '../services/evaluationApi';
 
-type Tab = 'Dashboard' | 'BLEU' | 'chrF++' | 'Concept F1' | 'Coverage' | 'LLM Judge';
+type Tab = 'Dashboard' | 'BLEU' | 'chrF++' | 'Concept F1' | 'Coverage' | 'Semantic Similarity' | 'LLM Judge';
 
 export default function EvaluationWorkspace() {
   const navigate = useNavigate();
@@ -25,6 +25,8 @@ export default function EvaluationWorkspace() {
       setProgressSnapshot(next);
       const summary = await getMetricSummary(dataset.session!.sessionId);
       setMetricSummary(summary);
+      const human = await getHumanEvaluations(dataset.session!.sessionId);
+      dataset.setHumanEvaluations(human.evaluations);
     };
     void loadBackendData();
   }, [dataset.session?.sessionId]);
@@ -40,6 +42,8 @@ export default function EvaluationWorkspace() {
     setProgressSnapshot(next);
     const summary = await getMetricSummary(dataset.session.sessionId);
     setMetricSummary(summary);
+    const human = await getHumanEvaluations(dataset.session.sessionId);
+    dataset.setHumanEvaluations(human.evaluations);
   };
 
   const runMetrics = async () => {
@@ -59,17 +63,18 @@ export default function EvaluationWorkspace() {
     }
   };
 
-  const metricMap: Record<Exclude<Tab, 'Dashboard'>, 'bleu' | 'chrf' | 'conceptF1' | 'coverage'> = {
+  const metricMap: Record<Exclude<Tab, 'Dashboard'>, 'bleu' | 'chrf' | 'conceptF1' | 'coverage' | 'semanticSimilarity'> = {
     BLEU: 'bleu',
     'chrF++': 'chrf',
     'Concept F1': 'conceptF1',
     Coverage: 'coverage',
+    'Semantic Similarity': 'semanticSimilarity',
     'LLM Judge': 'coverage',
   };
 
   return (
     <WorkspaceLayout active={tab} onChangeTab={setTab} onReset={() => { dataset.resetDataset(); navigate('/'); }}>
-      {tab === 'Dashboard' && <SummarySection total={dataset.totalCount} evaluated={dataset.evaluatedCount} onGo={setTab} examples={dataset.examples} session={dataset.session} backendProgress={progressSnapshot.total ? progressSnapshot : dataset.backendProgress} jsonPreview={jsonPreview} />}
+      {tab === 'Dashboard' && <SummarySection total={dataset.totalCount} evaluated={dataset.evaluatedCount} onGo={setTab} examples={dataset.examples} session={dataset.session} backendProgress={progressSnapshot.total ? progressSnapshot : dataset.backendProgress} jsonPreview={jsonPreview} humanEvaluations={dataset.humanEvaluations} />}
       {tab !== 'Dashboard' && tab !== 'LLM Judge' && (
         <MetricSection
           metricKey={metricMap[tab]}
@@ -80,6 +85,11 @@ export default function EvaluationWorkspace() {
           running={running}
           session={dataset.session}
           summary={metricSummary ?? dataset.metricSummary as any}
+          humanEvaluations={dataset.humanEvaluations}
+          onHumanEvaluationSaved={(evaluation) => {
+            dataset.upsertHumanEvaluation(evaluation);
+            void refreshProgress();
+          }}
         />
       )}
       {tab === 'LLM Judge' && <LLMJudgeSection examples={dataset.examples} sessionId={dataset.session?.sessionId ?? null} />}

@@ -1,11 +1,12 @@
 import { BarChart3, CheckCircle2, Clock3, TrendingUp } from 'lucide-react';
 import Card from '../components/ui/Card';
 import Button from '../components/ui/Button';
-import { Example, SessionInfo } from '../types/dataset';
+import { Example, HumanEvaluation, SessionInfo } from '../types/dataset';
+import ResultsSection from './ResultsSection';
 
-type Tab = 'Dashboard' | 'BLEU' | 'chrF++' | 'Concept F1' | 'Coverage';
+type Tab = 'Dashboard' | 'BLEU' | 'chrF++' | 'Concept F1' | 'Coverage' | 'Semantic Similarity';
 
-export default function SummarySection({ total, evaluated, onGo, examples, session, backendProgress, jsonPreview }: { total: number; evaluated: number; onGo: (tab: Tab) => void; examples: Example[]; session: SessionInfo | null; backendProgress: { total: number; evaluated: number; pending: number; progress: number }; jsonPreview: string }) {
+export default function SummarySection({ total, evaluated, onGo, examples, session, backendProgress, jsonPreview, humanEvaluations }: { total: number; evaluated: number; onGo: (tab: Tab) => void; examples: Example[]; session: SessionInfo | null; backendProgress: { total: number; evaluated: number; pending: number; progress: number; evaluatedHumanCount?: number; pendingHumanCount?: number; humanProgress?: number }; jsonPreview: string; humanEvaluations: HumanEvaluation[] }) {
   const pending = total - evaluated;
   const progress = backendProgress.total ? backendProgress.progress : (total ? Math.round((evaluated / total) * 100) : 0);
   const stats = [
@@ -13,12 +14,15 @@ export default function SummarySection({ total, evaluated, onGo, examples, sessi
     { label: 'Evaluados', value: evaluated, icon: CheckCircle2 },
     { label: 'Pendientes', value: pending, icon: Clock3 },
     { label: 'Progreso', value: `${progress}%`, icon: TrendingUp },
+    { label: 'Evaluaciones humanas realizadas', value: backendProgress.evaluatedHumanCount ?? humanEvaluations.length, icon: CheckCircle2 },
+    { label: 'Evaluaciones humanas pendientes', value: backendProgress.pendingHumanCount ?? Math.max(total * 4 - humanEvaluations.length, 0), icon: Clock3 },
+    { label: 'Progreso humano', value: `${backendProgress.humanProgress ?? (total ? Math.round((humanEvaluations.length / (total * 4)) * 100) : 0)}%`, icon: TrendingUp },
   ];
 
   return (
     <div className='space-y-6'>
-      <h1 className='text-6xl font-bold'>Dashboard</h1>
-      <p className='text-3xl text-slate-300'>Visión general del proyecto de evaluación</p>
+      <h1 className='text-4xl font-bold sm:text-6xl'>Dashboard</h1>
+      <p className='text-xl text-slate-300 sm:text-3xl'>Visión general del proyecto de evaluación</p>
       <Card className='grid gap-4 md:grid-cols-3'>
         <div>
           <p className='text-slate-400'>Sesión activa</p>
@@ -45,20 +49,22 @@ export default function SummarySection({ total, evaluated, onGo, examples, sessi
       <div className='grid grid-cols-1 gap-4 xl:grid-cols-2'>
         {stats.map(({ label, value, icon: Icon }) => (
           <Card key={label} className='flex items-center justify-between p-6'>
-            <div><p className='text-xl text-slate-300'>{label}</p><p className='mt-2 text-6xl font-bold'>{value}</p></div>
+            <div><p className='text-lg text-slate-300 sm:text-xl'>{label}</p><p className='mt-2 text-4xl font-bold sm:text-6xl'>{value}</p></div>
             <div className='rounded-2xl bg-[#EF0015] p-4'><Icon size={28} /></div>
           </Card>
         ))}
       </div>
       <Card className='p-6'>
-        <h3 className='text-4xl font-bold'>Acciones rápidas</h3>
+        <h3 className='text-3xl font-bold sm:text-4xl'>Acciones rápidas</h3>
         <div className='mt-4 flex flex-wrap gap-3'>
           <Button onClick={() => onGo('BLEU')}>Ir a BLEU</Button>
           <Button onClick={() => onGo('chrF++')}>Ver chrF++</Button>
           <Button onClick={() => onGo('Concept F1')}>Revisar Concept F1</Button>
           <Button onClick={() => onGo('Coverage')}>Abrir Coverage</Button>
+          <Button onClick={() => onGo('Semantic Similarity')}>Ver Semantic Similarity</Button>
         </div>
       </Card>
+      <ResultsSection humanEvaluations={humanEvaluations} />
     </div>
   );
 }

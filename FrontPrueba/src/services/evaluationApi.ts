@@ -1,20 +1,21 @@
 import axios from 'axios';
-import { Example, HumanEvaluation, LLMJudgeResult, ModelKey, SessionInfo } from '../types/dataset';
+import { Example, HumanEvaluation, LLMJudgeResult, ModelKey } from '../types/dataset';
 
-const api = axios.create({ baseURL: import.meta.env.VITE_API_BASE_URL ?? 'http://localhost:8000' });
+const api = axios.create({ baseURL: import.meta.env.VITE_API_BASE_URL ?? 'http://localhost:8000', timeout: 120000 });
 
-export type ProgressResult = { total: number; evaluated: number; pending: number; progress: number };
+export type ProgressResult = { total: number; evaluated: number; pending: number; progress: number; totalExamples?: number; totalModelEvaluations?: number; evaluatedHumanCount?: number; pendingHumanCount?: number; humanProgress?: number };
 export type MetricSummary = {
   bleu: { model: string; value: number | null }[];
   chrf: { model: string; value: number | null }[];
   conceptF1: { model: string; value: number | null }[];
   coverage: { model: string; value: number | null }[];
+  semanticSimilarity: { model: string; value: number | null }[];
 };
 
 export const uploadDataset = async (file: File) => {
   const formData = new FormData();
   formData.append('file', file);
-  const response = await api.post('/api/datasets/upload', formData, { headers: { 'Content-Type': 'multipart/form-data' } });
+  const response = await api.post('/api/datasets/upload', formData);
   return response.data as { success: boolean; sessionId: string; filename: string; examplesCount: number };
 };
 
@@ -81,8 +82,27 @@ export const runLLMJudgeBatch = async (payload: LLMJudgeBatchRequest, sessionId?
   return response.data as LLMJudgeBatchResponse;
 };
 
-export const saveHumanEvaluationApi = async (payload: { exampleId: string | number; evaluation: HumanEvaluation }, session?: SessionInfo | null) => {
-  return { ok: true, payload, session };
+export type SaveHumanEvaluationPayload = {
+  sessionId: string;
+  modelKey: ModelKey;
+  semanticScore: number;
+  clarityScore: number;
+  comment?: string;
+};
+
+export const saveHumanEvaluation = async (exampleId: string | number, payload: SaveHumanEvaluationPayload) => {
+  const response = await api.post(`/api/examples/${exampleId}/human-evaluation`, payload);
+  return response.data as { success: boolean; message: string; evaluation: HumanEvaluation; stored: string };
+};
+
+export const getHumanEvaluations = async (sessionId: string) => {
+  const response = await api.get('/api/human-evaluations', { params: { sessionId } });
+  return response.data as { success: boolean; sessionId: string; total: number; evaluations: HumanEvaluation[] };
+};
+
+export const getHumanEvaluation = async (exampleId: string | number, sessionId: string, modelKey: ModelKey) => {
+  const response = await api.get(`/api/examples/${exampleId}/human-evaluation`, { params: { sessionId, modelKey } });
+  return response.data as { success: boolean; sessionId: string; exampleId: string | number; modelKey: ModelKey; evaluation: HumanEvaluation | null; message?: string };
 };
 
 export default api;

@@ -1,6 +1,6 @@
 import { createContext, ReactNode, useContext, useEffect, useMemo, useState } from 'react';
 import { Example, HumanEvaluation, SessionInfo } from '../types/dataset';
-import { getExamples, getMetricSummary, getProgress } from '../services/evaluationApi';
+import { getExamples, getHumanEvaluations, getMetricSummary, getProgress } from '../services/evaluationApi';
 
 const CURRENT_SESSION_KEY = 'pictoeval.current-session';
 
@@ -23,12 +23,13 @@ type Ctx = {
   setCurrentExampleIndex: (n: number) => void;
   setDataset: (e: Example[], session?: SessionInfo) => void;
   updateExample: (exampleId: string | number, patch: Partial<Example>) => void;
-  saveHumanEvaluation: (exampleId: string | number, evaluation: Omit<HumanEvaluation, 'timestamp'>) => void;
-  evaluations: Record<string, HumanEvaluation>;
+  setHumanEvaluations: (evaluations: HumanEvaluation[]) => void;
+  upsertHumanEvaluation: (evaluation: HumanEvaluation) => void;
+  humanEvaluations: HumanEvaluation[];
   evaluatedCount: number;
   totalCount: number;
   session: SessionInfo | null;
-  backendProgress: { total: number; evaluated: number; pending: number; progress: number };
+  backendProgress: { total: number; evaluated: number; pending: number; progress: number; evaluatedHumanCount?: number; pendingHumanCount?: number; humanProgress?: number };
   metricSummary: unknown;
   loadingSession: boolean;
   resetDataset: () => void;
@@ -37,7 +38,7 @@ const DatasetContext = createContext<Ctx | null>(null);
 export const DatasetProvider = ({ children }: { children: ReactNode }) => {
   const [examples, setExamples] = useState<Example[]>([]);
   const [currentExampleIndex, setCurrentExampleIndex] = useState(0);
-  const [evaluations, setEvaluations] = useState<Record<string, HumanEvaluation>>({});
+  const [humanEvaluations, setHumanEvaluationsState] = useState<HumanEvaluation[]>([]);
   const [session, setSession] = useState<SessionInfo | null>(null);
   const [backendProgress, setBackendProgress] = useState({ total: 0, evaluated: 0, pending: 0, progress: 0 });
   const [metricSummary, setMetricSummary] = useState<unknown>(null);
@@ -45,8 +46,6 @@ export const DatasetProvider = ({ children }: { children: ReactNode }) => {
 
   useEffect(() => {
     const restoredSession = readJson<SessionInfo>(CURRENT_SESSION_KEY);
-    const restoredEvaluations = restoredSession ? readJson<Record<string, HumanEvaluation>>(`${CURRENT_SESSION_KEY}.evaluations.${restoredSession.sessionId}`) : null;
-
     const hydrate = async () => {
       if (!restoredSession) {
         setLoadingSession(false);
@@ -57,13 +56,12 @@ export const DatasetProvider = ({ children }: { children: ReactNode }) => {
         const remoteExamples = await getExamples(restoredSession.sessionId);
         setExamples(remoteExamples);
         setSession(restoredSession);
-        if (restoredEvaluations) {
-          setEvaluations(restoredEvaluations);
-        }
         const progress = await getProgress(restoredSession.sessionId);
         setBackendProgress(progress);
         const summary = await getMetricSummary(restoredSession.sessionId);
         setMetricSummary(summary);
+        const human = await getHumanEvaluations(restoredSession.sessionId);
+        setHumanEvaluationsState(human.evaluations);
       } catch {
         localStorage.removeItem(CURRENT_SESSION_KEY);
       } finally {
@@ -77,9 +75,8 @@ export const DatasetProvider = ({ children }: { children: ReactNode }) => {
   useEffect(() => {
     if (session) {
       writeJson(CURRENT_SESSION_KEY, session);
-      writeJson(`${CURRENT_SESSION_KEY}.evaluations.${session.sessionId}`, evaluations);
     }
-  }, [session, evaluations]);
+  }, [session]);
 
   const setDataset = (nextExamples: Example[], nextSession?: SessionInfo) => {
     setExamples(nextExamples);
@@ -92,9 +89,13 @@ export const DatasetProvider = ({ children }: { children: ReactNode }) => {
     setExamples((previous) => previous.map((example) => (String(example.id) === String(exampleId) ? { ...example, ...patch } : example)));
   };
 
-  const saveHumanEvaluation = (exampleId: string | number, evaluation: Omit<HumanEvaluation, 'timestamp'>) => setEvaluations((p) => ({ ...p, [String(exampleId)]: { ...evaluation, timestamp: new Date().toISOString() } }));
-  const resetDataset = () => { setExamples([]); setEvaluations({}); setCurrentExampleIndex(0); setSession(null); setBackendProgress({ total: 0, evaluated: 0, pending: 0, progress: 0 }); localStorage.removeItem(CURRENT_SESSION_KEY); };
-  const value = useMemo(() => ({ examples, currentExampleIndex, setCurrentExampleIndex, setDataset, updateExample, saveHumanEvaluation, evaluations, evaluatedCount: Object.keys(evaluations).length, totalCount: examples.length, session, backendProgress, metricSummary, loadingSession, resetDataset }), [examples, currentExampleIndex, evaluations, session, backendProgress, metricSummary, loadingSession]);
+  const setHumanEvaluations = (evaluations: HumanEvaluation[]) => setHumanEvaluationsState(evaluations);
+  const upsertHumanEvaluation = (evaluation: HumanEvaluation) => setHumanEvaluationsState((previous) => {
+    const next = previous.filter((item) => !(String(item.exampleId) === String(evaluation.exampleId) && item.modelKey === evaluation.modelKey));
+    return [...next, evaluation];
+  });
+  const resetDataset = () => { setExamples([]); setHumanEvaluationsState([]); setCurrentExampleIndex(0); setSession(null); setBackendProgress({ total: 0, evaluated: 0, pending: 0, progress: 0 }); localStorage.removeItem(CURRENT_SESSION_KEY); };
+  const value = useMemo(() => ({ examples, currentExampleIndex, setCurrentExampleIndex, setDataset, updateExample, setHumanEvaluations, upsertHumanEvaluation, humanEvaluations, evaluatedCount: humanEvaluations.length, totalCount: examples.length, session, backendProgress, metricSummary, loadingSession, resetDataset }), [examples, currentExampleIndex, humanEvaluations, session, backendProgress, metricSummary, loadingSession]);
   return <DatasetContext.Provider value={value}>{children}</DatasetContext.Provider>;
 };
 export const useDataset = () => { const ctx = useContext(DatasetContext); if (!ctx) throw new Error('DatasetContext missing'); return ctx; };

@@ -22,7 +22,7 @@ En PowerShell:
 Si el entorno virtual no existe todavía, créalo una sola vez desde la raíz del proyecto:
 
 ```powershell
-python -m venv venv
+py -m venv venv
 ```
 
 ### 3. Instalar dependencias del backend
@@ -79,3 +79,54 @@ La API key se obtiene desde Google AI Studio.
 
 - El frontend consume por defecto el backend en `http://localhost:8000`.
 - Si quieres cambiar esa URL, define `VITE_API_BASE_URL` en el frontend.
+
+## Evaluación Humana
+
+La evaluación humana permite calificar cada predicción de modelo para un ejemplo específico. No requiere login y se guarda temporalmente en archivos físicos dentro del backend.
+
+Endpoint para guardar:
+
+```txt
+POST /api/examples/{id}/human-evaluation
+```
+
+Body esperado:
+
+```json
+{
+  "sessionId": "abc123",
+  "modelKey": "modelo_1",
+  "semanticScore": 4,
+  "clarityScore": 3,
+  "comment": "Se entiende la acción principal, pero falta un concepto importante."
+}
+```
+
+Validaciones principales:
+
+- `sessionId` es obligatorio.
+- `modelKey` debe ser `modelo_1`, `modelo_2`, `modelo_3` o `modelo_4`.
+- `semanticScore` y `clarityScore` deben estar entre 1 y 5.
+- El ejemplo debe existir en el dataset de la sesión.
+
+Los archivos se guardan en:
+
+```txt
+backend/data/{sessionId}/human_evaluations/example_{exampleId}_{modelKey}.json
+```
+
+También existen endpoints para consultar:
+
+```txt
+GET /api/human-evaluations?sessionId=abc123
+GET /api/examples/{id}/human-evaluation?sessionId=abc123&modelKey=modelo_1
+```
+
+El endpoint `/api/progress` incluye progreso humano con `evaluatedHumanCount`, `pendingHumanCount` y `humanProgress`.
+
+Por ahora se usa almacenamiento físico en JSON. Para una futura migración a PostgreSQL/Supabase, están preparados estos scripts:
+
+```txt
+backend/sql/create_human_evaluations.sql
+backend/sql/insert_human_evaluation_example.sql
+```
