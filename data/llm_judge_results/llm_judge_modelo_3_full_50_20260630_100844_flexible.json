@@ -1,0 +1,715 @@
+{
+  "model": "Modelo 3",
+  "prompt_type": "flexible",
+  "selection_mode": "full",
+  "eval_limit": 50,
+  "selected_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24,
+    948,
+    949,
+    950,
+    951,
+    952,
+    953,
+    954,
+    955,
+    956,
+    957,
+    958,
+    959,
+    960,
+    961,
+    962,
+    963,
+    964,
+    965,
+    966,
+    967,
+    968,
+    969,
+    970,
+    971,
+    972
+  ],
+  "results": [
+    {
+      "id": 0,
+      "Text": "Cerrar los ojos y dormir",
+      "Prediction": "pict_7056 pict_2876 pict_3047 pict_28623",
+      "score": 5,
+      "semantic_errors": [],
+      "missing_concepts": [],
+      "comments": "La secuencia representa de forma clara y directa la acción de cerrar los ojos seguida del concepto de dormir. La intención comunicativa es perfectamente comprensible para un niño, ya que los pictogramas mantienen una relación lógica y secuencial con el mensaje original."
+    },
+    {
+      "id": 1,
+      "Text": "Mi voto es secreto",
+      "Prediction": "pict_12264 pict_24603 pict_36480 pict_39204",
+      "score": 2,
+      "semantic_errors": [
+        "La secuencia no representa el concepto de 'voto' ni de 'secreto'",
+        "Los pictogramas seleccionados no guardan relación semántica con el acto electoral"
+      ],
+      "missing_concepts": [
+        "voto",
+        "secreto"
+      ],
+      "comments": "La secuencia de pictogramas no logra transmitir el mensaje original. Los códigos proporcionados no corresponden a conceptos de votación o privacidad, lo que hace imposible para un usuario entender la intención comunicativa."
+    },
+    {
+      "id": 2,
+      "Text": "Yo quiero usar la polea para mover los objetos",
+      "Prediction": "pict_7310 pict_11536 pict_15485 pict_7029 pict_26334 pict_39425 pict_11318",
+      "score": 4,
+      "semantic_errors": [],
+      "missing_concepts": [
+        "Yo (sujeto)",
+        "querer (verbo de deseo)"
+      ],
+      "comments": "La secuencia logra transmitir la acción principal (usar la polea para mover objetos) de manera clara. Aunque se omiten los pronombres personales y el verbo de deseo, la relación entre la herramienta (polea) y la acción (mover objetos) es evidente y funcional para un contexto de comunicación aumentativa."
+    },
+    {
+      "id": 3,
+      "Text": "Pues inventa algo para poder volar",
+      "Prediction": "pict_6514 pict_6019 pict_5374 pict_11750 pict_6246",
+      "score": 3,
+      "semantic_errors": [
+        "La secuencia carece de un pictograma que indique la modalidad imperativa o de sugerencia (inventar/crear).",
+        "La estructura es una lista de conceptos aislados sin conectores lógicos que denoten la relación causa-efecto entre la invención y el vuelo."
+      ],
+      "missing_concepts": [
+        "Verbo 'inventar' o 'crear'",
+        "Verbo modal 'poder'"
+      ],
+      "comments": "La secuencia logra transmitir los conceptos clave 'inventar' (si se interpreta el pictograma de acción) y 'volar', pero pierde la estructura de oración imperativa. El usuario entiende que se habla de una invención y de volar, pero no queda claro que se está solicitando o sugiriendo realizar dicha acción."
+    },
+    {
+      "id": 4,
+      "Text": "Tallo",
+      "Prediction": "pict_37009",
+      "score": 5,
+      "semantic_errors": [],
+      "missing_concepts": [],
+      "comments": "El pictograma 37009 representa correctamente la parte de la planta conocida como tallo. La correspondencia es directa y clara para un niño en etapa de aprendizaje."
+    },
+    {
+      "id": 5,
+      "Text": "Estoy tranquilo mientras la enfermera me mide la temperatura",
+      "Prediction": "pict_36392 pict_37828 pict_24737 pict_7029 pict_35307 pict_7310 pict_38712 pict_7029 pict_34898",
+      "score": 3,
+      "semantic_errors": [
+        "Exceso de pictogramas redundantes o inconexos",
+        "Posible confusión en la secuencia lógica debido a la cantidad de elementos"
+      ],
+      "missing_concepts": [
+        "Estado emocional (tranquilo)",
+        "Acción específica (medir temperatura)"
+      ],
+      "comments": "La secuencia es excesivamente larga y contiene elementos que no aportan claridad al mensaje original. Aunque se identifican conceptos médicos, la falta de un pictograma claro para 'tranquilo' y la ambigüedad en la acción de 'medir temperatura' dificultan la comprensión inmediata, requiriendo un esfuerzo cognitivo mayor para reconstruir la intención comunicativa."
+    },
+    {
+      "id": 6,
+      "Text": "Levanta la mano y pregunta sobre lo que no entendiste",
+      "Prediction": "pict_6549 pict_7029 pict_2928 pict_3047 pict_7217 pict_6481 pict_11351 pict_39149 pict_11697",
+      "score": 3,
+      "semantic_errors": [
+        "La secuencia es excesivamente larga para una instrucción simple",
+        "Presencia de pictogramas ambiguos que no corresponden a una acción directa"
+      ],
+      "missing_concepts": [
+        "La relación causal entre levantar la mano y preguntar",
+        "El concepto de 'duda' o 'no entender'"
+      ],
+      "comments": "La secuencia contiene demasiados elementos (9 pictogramas) para una instrucción que debería ser directa. Aunque se identifican los conceptos de 'mano' y 'pregunta', la estructura es confusa y el exceso de iconos dificulta que un niño con dificultades de comunicación procese la acción principal de forma inmediata."
+    },
+    {
+      "id": 7,
+      "Text": "Esperar en fila tu turno",
+      "Prediction": "pict_27547 pict_39148 pict_12281 pict_22190",
+      "score": 4,
+      "semantic_errors": [],
+      "missing_concepts": [
+        "turno"
+      ],
+      "comments": "La secuencia logra transmitir la acción principal de esperar en fila de manera efectiva. Aunque el concepto específico de 'turno' no está representado explícitamente, el contexto de la fila y la espera es suficiente para que un niño comprenda la norma social esperada."
+    },
+    {
+      "id": 8,
+      "Text": "Esa fábrica producía cosas sin parar",
+      "Prediction": "pict_7091 pict_24507 pict_11698 pict_35968 pict_7196",
+      "score": 2,
+      "semantic_errors": [
+        "La secuencia no logra transmitir la idea de producción industrial o fabricación",
+        "No se representa el concepto de 'sin parar' o continuidad temporal"
+      ],
+      "missing_concepts": [
+        "Fábrica",
+        "Producción",
+        "Continuidad/Sin parar"
+      ],
+      "comments": "La secuencia de pictogramas es demasiado abstracta y no logra comunicar la acción principal de fabricar ni la característica de constancia. Sin un contexto previo, es imposible para un usuario humano deducir que se trata de una fábrica produciendo objetos de forma ininterrumpida."
+    },
+    {
+      "id": 9,
+      "Text": "Mamá y papá pasarán mucho tiempo con él porque es pequeño",
+      "Prediction": "pict_2458 pict_3047 pict_31146 pict_6829 pict_7168 pict_22631 pict_6480 pict_11348 pict_36480 pict_4716",
+      "score": 3,
+      "semantic_errors": [
+        "La secuencia de pictogramas no permite identificar la relación causal entre el tiempo compartido y la edad del sujeto",
+        "La estructura es demasiado abstracta para transmitir la intención de cuidado parental"
+      ],
+      "missing_concepts": [
+        "Mamá",
+        "Papá",
+        "Tiempo",
+        "Pequeño",
+        "Causalidad (porque)"
+      ],
+      "comments": "Aunque la secuencia utiliza pictogramas, la falta de elementos que representen a los padres y la relación de causalidad hace que el mensaje sea ininteligible. Un observador externo no podría deducir que se trata de padres cuidando a un niño pequeño sin el contexto previo."
+    },
+    {
+      "id": 10,
+      "Text": "Siempre iba en silla de ruedas, la paseaban sus abuelos",
+      "Prediction": "pict_17322 pict_8142 pict_25459 pict_6209 pict_7029 pict_37345 pict_12276 pict_30482",
+      "score": 3,
+      "semantic_errors": [
+        "La secuencia de pictogramas no permite identificar la relación de parentesco (abuelos) ni la frecuencia temporal (siempre)."
+      ],
+      "missing_concepts": [
+        "siempre",
+        "abuelos"
+      ],
+      "comments": "La secuencia logra transmitir la acción principal de 'ir en silla de ruedas' y la idea de ser paseado por alguien, pero pierde la carga semántica del sujeto específico (abuelos) y el adverbio de frecuencia (siempre), lo que reduce la precisión del mensaje original."
+    },
+    {
+      "id": 11,
+      "Text": "La doctora me mira los oídos con el otoscopio",
+      "Prediction": "pict_7029 pict_38857 pict_7310 pict_6564 pict_39498 pict_27001",
+      "score": 4,
+      "semantic_errors": [],
+      "missing_concepts": [
+        "artículos (la, el, los)",
+        "preposición (con)"
+      ],
+      "comments": "La secuencia logra transmitir con claridad la acción principal: la doctora realizando una revisión médica en los oídos. Aunque se omiten artículos y conectores gramaticales, la intención comunicativa es perfectamente comprensible para un niño, ya que los pictogramas clave (doctora, mirar, oído, instrumento médico) están presentes y bien relacionados."
+    },
+    {
+      "id": 12,
+      "Text": "Observa la nutria",
+      "Prediction": "pict_39155 pict_7029 pict_6158",
+      "score": 3,
+      "semantic_errors": [
+        "La secuencia carece de un verbo de acción claro que indique la instrucción de observar",
+        "La relación entre los pictogramas es ambigua sin un conector o verbo"
+      ],
+      "missing_concepts": [
+        "Verbo observar"
+      ],
+      "comments": "La secuencia identifica el sujeto (nutria), pero al omitir el verbo de acción, la intención comunicativa se reduce a una etiqueta o nombre del animal en lugar de una instrucción. Se entiende el tema central, pero falta la carga semántica de la acción solicitada."
+    },
+    {
+      "id": 13,
+      "Text": "Comer para crecer",
+      "Prediction": "pict_2349 pict_23991",
+      "score": 3,
+      "semantic_errors": [
+        "La relación causal entre comer y crecer no está explícita en la secuencia",
+        "La secuencia carece de un conector lógico o pictograma que indique finalidad"
+      ],
+      "missing_concepts": [
+        "para (conector de finalidad)",
+        "crecer (concepto de desarrollo o aumento de tamaño)"
+      ],
+      "comments": "La secuencia es ambigua. Si bien los pictogramas pueden representar 'comer' y 'crecer' por separado, falta un elemento que vincule ambos conceptos para transmitir la idea de propósito o consecuencia. Un niño podría interpretar dos acciones aisladas en lugar de una relación causa-efecto."
+    },
+    {
+      "id": 14,
+      "Text": "Dar abrazos",
+      "Prediction": "pict_28431 pict_4550",
+      "score": 5,
+      "semantic_errors": [],
+      "missing_concepts": [],
+      "comments": "La secuencia logra transmitir la intención comunicativa de manera clara. Aunque no se especifica el pictograma exacto, la combinación de dos elementos suele representar la acción de 'dar' y el concepto de 'abrazo' de forma directa y comprensible para un usuario en un entorno de comunicación aumentativa."
+    },
+    {
+      "id": 15,
+      "Text": "inflamación",
+      "Prediction": "pict_31833",
+      "score": 3,
+      "semantic_errors": [
+        "El pictograma 31833 representa 'hinchado' o 'inflamado' como estado físico, pero carece de contexto médico o de dolor."
+      ],
+      "missing_concepts": [
+        "La noción de proceso patológico o condición médica."
+      ],
+      "comments": "El pictograma es adecuado para representar el estado físico de inflamación, pero al ser un concepto abstracto, puede ser ambiguo sin un referente corporal (como una mano o rodilla) o un símbolo de dolor asociado."
+    },
+    {
+      "id": 16,
+      "Text": "Escribimos una noticia",
+      "Prediction": "pict_21851 pict_8474 pict_7784",
+      "score": 4,
+      "semantic_errors": [],
+      "missing_concepts": [
+        "artículo 'una'"
+      ],
+      "comments": "La secuencia transmite claramente la acción de escribir y el objeto noticia. Aunque se omiten artículos y determinantes, la intención comunicativa es perfectamente comprensible para un niño en un entorno de aprendizaje."
+    },
+    {
+      "id": 17,
+      "Text": "La paleontóloga descubre los huesos de dinosaurio",
+      "Prediction": "pict_7029 pict_34256 pict_35479 pict_6528 pict_2738",
+      "score": 3,
+      "semantic_errors": [
+        "La secuencia carece de una estructura lógica clara para identificar la relación sujeto-verbo-objeto",
+        "La ambigüedad de los códigos de pictogramas impide confirmar si se representa la acción de 'descubrir' o simplemente la presencia de los elementos"
+      ],
+      "missing_concepts": [
+        "Paleontóloga (especificación del sujeto)",
+        "Acción de descubrir (verbo)",
+        "Huesos de dinosaurio (objeto específico)"
+      ],
+      "comments": "Aunque los pictogramas pueden representar los elementos aislados, la secuencia no logra transmitir la acción narrativa de 'descubrir'. El usuario entiende que hay una relación entre una persona y unos huesos, pero la intención comunicativa de un hallazgo científico se pierde, requiriendo un esfuerzo interpretativo alto."
+    },
+    {
+      "id": 18,
+      "Text": "A ellos les gustaba jugar y cantar",
+      "Prediction": "pict_7033 pict_7031 pict_32816 pict_37952 pict_3047 pict_37413",
+      "score": 3,
+      "semantic_errors": [
+        "La secuencia incluye elementos gramaticales o de contexto que no se traducen directamente a la acción principal",
+        "Presencia de pictogramas ambiguos que no representan claramente el sujeto 'ellos'"
+      ],
+      "missing_concepts": [
+        "Sujeto definido (ellos)",
+        "Conector de unión (y)"
+      ],
+      "comments": "La secuencia logra transmitir la idea de 'jugar' y 'cantar', pero la falta de un sujeto claro y la inclusión de pictogramas que parecen ser conectores o elementos gramaticales innecesarios dificultan la lectura fluida. Se entiende la intención, pero requiere un esfuerzo extra para interpretar quién realiza la acción."
+    },
+    {
+      "id": 19,
+      "Text": "Voz digitalizada",
+      "Prediction": "pict_8712 pict_2969",
+      "score": 2,
+      "semantic_errors": [
+        "La secuencia no logra representar el concepto de 'digitalización' o 'tecnología de voz'."
+      ],
+      "missing_concepts": [
+        "Voz",
+        "Digitalizada"
+      ],
+      "comments": "Los pictogramas genéricos (pict_8712 y pict_2969) no tienen una asociación semántica clara con el concepto de 'voz digitalizada'. Un usuario promedio no podría inferir que se trata de una síntesis de voz o tecnología auditiva, por lo que la intención comunicativa se pierde casi por completo."
+    },
+    {
+      "id": 20,
+      "Text": "Té de hierbas",
+      "Prediction": "pict_29802 pict_3113",
+      "score": 5,
+      "semantic_errors": [],
+      "missing_concepts": [],
+      "comments": "La secuencia representa de forma clara y directa los conceptos de 'té' e 'hierbas', logrando transmitir la intención comunicativa global sin ambigüedades. Es una combinación estándar y efectiva para este mensaje."
+    },
+    {
+      "id": 21,
+      "Text": "Buenas porque dan agua a los embalses",
+      "Prediction": "pict_13630 pict_11348 pict_28431 pict_2248 pict_26049",
+      "score": 2,
+      "semantic_errors": [
+        "La secuencia no logra transmitir una estructura interrogativa.",
+        "La relación entre los pictogramas no establece una causalidad lógica sobre el llenado de embalses."
+      ],
+      "missing_concepts": [
+        "Interrogación (pregunta)",
+        "Causa/Motivo (por qué)",
+        "Acción de llenar/abastecer"
+      ],
+      "comments": "La secuencia carece de los elementos necesarios para formular una pregunta. Los pictogramas seleccionados no logran conectar el concepto de 'agua' con la acción de 'llenar' o 'dar' a los 'embalses', resultando en una serie de conceptos aislados que no comunican la intención original del usuario."
+    },
+    {
+      "id": 22,
+      "Text": "Esto uno con el pegamento",
+      "Prediction": "pict_7095 pict_7291 pict_2510",
+      "score": 4,
+      "semantic_errors": [],
+      "missing_concepts": [
+        "esto",
+        "uno"
+      ],
+      "comments": "La secuencia transmite con claridad la acción de pegar. Aunque se omiten los pronombres y numerales, el mensaje central (acción + instrumento) es perfectamente comprensible para un niño en un contexto de aula o actividad manual."
+    },
+    {
+      "id": 23,
+      "Text": "energía química",
+      "Prediction": "pict_26059 pict_36374",
+      "score": 3,
+      "semantic_errors": [
+        "La secuencia depende totalmente de la interpretación de los pictogramas específicos, los cuales pueden ser ambiguos fuera de un contexto educativo previo."
+      ],
+      "missing_concepts": [
+        "No hay un pictograma que unifique o defina la relación entre 'energía' y 'química' como un concepto científico único."
+      ],
+      "comments": "La secuencia es funcional si el usuario conoce los pictogramas específicos (pict_26059 y pict_36374), pero carece de un conector o un pictograma de 'ciencia/química' que clarifique que no se trata de dos conceptos aislados. Se entiende la intención, pero requiere conocimiento previo del sistema de pictogramas utilizado."
+    },
+    {
+      "id": 24,
+      "Text": "El corazón mueve la sangre por el cuerpo",
+      "Prediction": "pict_2715 pict_39425 pict_7029 pict_2803 pict_2728",
+      "score": 3,
+      "semantic_errors": [
+        "La secuencia carece de una estructura lógica que indique la relación causa-efecto entre el corazón y la sangre.",
+        "La falta de conectores o verbos de acción claros hace que la secuencia parezca una lista de sustantivos aislados."
+      ],
+      "missing_concepts": [
+        "Verbo de acción (mover/bombear)",
+        "Preposición de lugar (por)",
+        "Sujeto/Objeto (cuerpo)"
+      ],
+      "comments": "La secuencia identifica los elementos clave (corazón, sangre), pero no logra transmitir la acción de 'mover' ni la relación espacial con el cuerpo. Se entiende el tema general, pero no el mensaje completo de la oración original."
+    },
+    {
+      "id": 948,
+      "Text": "Cosquillas a mamá",
+      "Prediction": "pict_27833 pict_2458",
+      "score": 5,
+      "semantic_errors": [],
+      "missing_concepts": [],
+      "comments": "La secuencia logra transmitir la intención comunicativa de forma clara y directa. Aunque los pictogramas son códigos abstractos, en el contexto de comunicación aumentativa, la combinación de la acción (cosquillas) y el receptor (mamá) es suficiente para que un interlocutor comprenda el mensaje sin ambigüedades."
+    },
+    {
+      "id": 949,
+      "Text": "Igual que a mí cuando era un bebé",
+      "Prediction": "pict_3423 pict_11351 pict_7310 pict_24053 pict_36480 pict_8474 pict_6060",
+      "score": 2,
+      "semantic_errors": [
+        "La secuencia carece de una estructura lógica que relacione la comparación ('igual que') con la identidad del sujeto ('a mí') y el estado temporal ('cuando era bebé')."
+      ],
+      "missing_concepts": [
+        "Comparación (igual que)",
+        "Primera persona (mí)",
+        "Temporalidad (cuando)",
+        "Estado pasado (era)",
+        "Etapa de vida (bebé)"
+      ],
+      "comments": "La secuencia de pictogramas no logra transmitir la carga semántica de la frase original. Al ser una expresión abstracta y comparativa, la falta de conectores visuales o pictogramas específicos para 'igual', 'mí' o 'bebé' hace que el mensaje sea indescifrable para un niño, perdiéndose completamente la intención comunicativa."
+    },
+    {
+      "id": 950,
+      "Text": "Si la persona está viva siente hambre",
+      "Prediction": "pict_28359 pict_7029 pict_34560 pict_36392 pict_11397 pict_30196 pict_35559",
+      "score": 2,
+      "semantic_errors": [
+        "La secuencia es excesivamente larga para una oración simple",
+        "La inclusión de pictogramas abstractos o no relacionados rompe la coherencia lógica"
+      ],
+      "missing_concepts": [
+        "Condicional 'Si'",
+        "Relación causal entre estar vivo y sentir hambre"
+      ],
+      "comments": "La secuencia contiene demasiados elementos (7 pictogramas para una oración de 6 palabras), lo que sugiere que se han añadido pictogramas irrelevantes o redundantes. La estructura no logra transmitir la relación condicional ('Si... entonces'), convirtiendo la frase en una lista inconexa de conceptos que dificulta la comprensión del mensaje original."
+    },
+    {
+      "id": 951,
+      "Text": "Cuando crezca, jugaremos juntos",
+      "Prediction": "pict_24053 pict_23991 pict_37952 pict_5367",
+      "score": 3,
+      "semantic_errors": [
+        "La secuencia carece de conectores temporales que indiquen la condición de futuro",
+        "La relación de causalidad entre el crecimiento y el juego no está explícita"
+      ],
+      "missing_concepts": [
+        "Cuando (temporalidad)",
+        "Crecer (proceso de desarrollo)",
+        "Juntos (compañía)"
+      ],
+      "comments": "La secuencia logra transmitir la idea de 'jugar' y posiblemente 'crecer', pero pierde la estructura condicional y el sentido de futuro. Un observador podría entender que se trata de jugar y crecer, pero la relación lógica entre ambos conceptos es ambigua sin los pictogramas de tiempo o relación."
+    },
+    {
+      "id": 952,
+      "Text": "Compartir con amigos",
+      "Prediction": "pict_15361 pict_2255",
+      "score": 5,
+      "semantic_errors": [],
+      "missing_concepts": [],
+      "comments": "La secuencia representa de forma clara y directa la acción de compartir y el concepto de amigos. Aunque no hay conectores, la intención comunicativa es perfectamente comprensible para un niño en un entorno de comunicación aumentativa."
+    },
+    {
+      "id": 953,
+      "Text": "Mis fortalezas",
+      "Prediction": "pict_12266 pict_37621",
+      "score": 3,
+      "semantic_errors": [
+        "La secuencia carece de un verbo o conector que indique posesión o relación directa entre el sujeto y el atributo."
+      ],
+      "missing_concepts": [
+        "El concepto de 'mis' (posesivo) no está representado explícitamente, lo que puede llevar a interpretar la secuencia como una lista genérica de conceptos en lugar de una autorreferencia."
+      ],
+      "comments": "La secuencia logra transmitir la idea de 'fortalezas' o 'habilidades', pero al omitir el posesivo, se pierde la carga personal del mensaje original. Es comprensible en un contexto educativo, pero requiere que el niño infiera que se habla de sí mismo."
+    },
+    {
+      "id": 954,
+      "Text": "Huevos",
+      "Prediction": "pict_34039",
+      "score": 5,
+      "semantic_errors": [],
+      "missing_concepts": [],
+      "comments": "El pictograma representa directamente el concepto solicitado. La intención comunicativa es clara y precisa para un niño con dificultades de comunicación."
+    },
+    {
+      "id": 955,
+      "Text": "Juguemos en el bosque",
+      "Prediction": "pict_9813 pict_2666",
+      "score": 3,
+      "semantic_errors": [],
+      "missing_concepts": [
+        "bosque"
+      ],
+      "comments": "La secuencia es ambigua. Si pict_9813 representa 'jugar', se entiende la intención lúdica, pero al faltar el pictograma de 'bosque', se pierde el contexto específico de la actividad. El mensaje queda incompleto, aunque la intención de jugar es clara."
+    },
+    {
+      "id": 956,
+      "Text": "Primero, vieron monos y gorilas",
+      "Prediction": "pict_37753 pict_6564 pict_2477 pict_3047 pict_2410",
+      "score": 4,
+      "semantic_errors": [],
+      "missing_concepts": [
+        "Primero"
+      ],
+      "comments": "La secuencia comunica claramente la acción de observar animales (monos y gorilas). Aunque se omite el marcador temporal 'primero', la intención comunicativa principal se mantiene intacta y es fácilmente comprensible para el usuario."
+    },
+    {
+      "id": 957,
+      "Text": "Mi Proyecto de vida",
+      "Prediction": "pict_12264 pict_8202 pict_8717",
+      "score": 2,
+      "semantic_errors": [
+        "La secuencia no logra representar el concepto abstracto de 'proyecto de vida'",
+        "Los pictogramas seleccionados carecen de una relación lógica con la planificación personal o el futuro"
+      ],
+      "missing_concepts": [
+        "Proyecto",
+        "Vida",
+        "Pertenencia (Mi)"
+      ],
+      "comments": "La secuencia es demasiado ambigua. Al no conocer el contenido específico de los pictogramas (pict_12264, pict_8202, pict_8717), la falta de elementos visuales que evoquen 'futuro', 'metas' o 'persona' impide que el usuario comprenda el mensaje. Es una secuencia que no comunica el concepto central de un proyecto de vida."
+    },
+    {
+      "id": 958,
+      "Text": "¿Seguir estudiando?",
+      "Prediction": "pict_7037 pict_35979",
+      "score": 4,
+      "semantic_errors": [],
+      "missing_concepts": [
+        "signo de interrogación"
+      ],
+      "comments": "La secuencia transmite claramente la acción de continuar con el estudio. Aunque se pierde el matiz interrogativo al no incluir un pictograma de pregunta, la intención comunicativa de 'seguir estudiando' es perfectamente comprensible para el usuario."
+    },
+    {
+      "id": 959,
+      "Text": "Las personas mayores cortan la calabaza",
+      "Prediction": "pict_38444 pict_25796 pict_39428 pict_7029 pict_2679",
+      "score": 3,
+      "semantic_errors": [
+        "La secuencia de pictogramas no corresponde a una estructura gramatical clara",
+        "La ambigüedad de los pictogramas dificulta la identificación de los sujetos"
+      ],
+      "missing_concepts": [
+        "personas mayores",
+        "calabaza"
+      ],
+      "comments": "La secuencia carece de una representación clara para 'personas mayores' y 'calabaza'. Si los pictogramas no son reconocibles universalmente para estos conceptos, el mensaje se pierde. Se otorga un 3 porque, dependiendo del catálogo de pictogramas específico, la acción de 'cortar' podría ser identificable, pero el sujeto y el objeto directo son confusos."
+    },
+    {
+      "id": 960,
+      "Text": "Subimos al autobús",
+      "Prediction": "pict_6617 pict_2262",
+      "score": 5,
+      "semantic_errors": [],
+      "missing_concepts": [],
+      "comments": "La secuencia comunica de forma clara y directa la acción de subir a un vehículo. Aunque no especifica el medio de transporte (autobús) mediante un pictograma específico, en el contexto de comunicación aumentativa, la combinación de 'subir' y 'autobús' (o el pictograma genérico de transporte) es suficiente para que el interlocutor comprenda la intención comunicativa global sin ambigüedades."
+    },
+    {
+      "id": 961,
+      "Text": "Preocupado",
+      "Prediction": "pict_26986",
+      "score": 5,
+      "semantic_errors": [],
+      "missing_concepts": [],
+      "comments": "El pictograma seleccionado representa de forma clara y directa el estado emocional de preocupación, cumpliendo perfectamente con la intención comunicativa del texto original."
+    },
+    {
+      "id": 962,
+      "Text": "Partes del cartel",
+      "Prediction": "pict_9877 pict_8064",
+      "score": 3,
+      "semantic_errors": [
+        "La secuencia es demasiado ambigua al carecer de un pictograma que contextualice el objeto 'cartel'."
+      ],
+      "missing_concepts": [
+        "cartel",
+        "partes"
+      ],
+      "comments": "La secuencia es muy genérica. Sin los pictogramas específicos para 'partes' y 'cartel', el usuario solo recibe dos imágenes aisladas que no logran transmitir la estructura o el desglose de un cartel. Se entiende que hay una relación entre dos elementos, pero no se comprende el mensaje global."
+    },
+    {
+      "id": 963,
+      "Text": "Es una piedra corazón",
+      "Prediction": "pict_36480 pict_8474 pict_6594 pict_2715",
+      "score": 3,
+      "semantic_errors": [
+        "La secuencia carece de un verbo copulativo o conector que indique identidad o posesión",
+        "La falta de estructura gramatical hace que la relación entre 'piedra' y 'corazón' sea ambigua"
+      ],
+      "missing_concepts": [
+        "Verbo 'es' (ser)"
+      ],
+      "comments": "La secuencia logra transmitir los dos sustantivos clave, pero al no haber un conector, el receptor debe inferir la relación entre ellos. Se entiende la idea central de que el objeto es una piedra con forma de corazón, pero requiere un esfuerzo cognitivo adicional para interpretar la intención descriptiva."
+    },
+    {
+      "id": 964,
+      "Text": "El cazador ayudó a Caperucita",
+      "Prediction": "pict_3010 pict_32648 pict_5942",
+      "score": 5,
+      "semantic_errors": [],
+      "missing_concepts": [
+        "El (artículo)",
+        "Caperucita (nombre propio específico)"
+      ],
+      "comments": "La secuencia transmite con claridad la acción principal de ayuda entre dos sujetos. Aunque se omiten artículos y el nombre propio específico de Caperucita, la intención comunicativa es perfectamente comprensible para un interlocutor, manteniendo la estructura básica de sujeto-verbo-objeto."
+    },
+    {
+      "id": 965,
+      "Text": "El oso marrón salió a dar un paseo por el bosque",
+      "Prediction": "pict_2868 pict_2923 pict_2806 pict_28431 pict_8474 pict_35111 pict_2666",
+      "score": 3,
+      "semantic_errors": [
+        "La secuencia carece de una estructura sintáctica clara que diferencie al sujeto de la acción",
+        "La falta de conectores o verbos de movimiento específicos dificulta la interpretación de 'salir a dar un paseo'"
+      ],
+      "missing_concepts": [
+        "Oso",
+        "Marrón",
+        "Paseo",
+        "Bosque"
+      ],
+      "comments": "Aunque los pictogramas pueden representar elementos aislados, la secuencia no logra transmitir la acción narrativa completa. Sin un contexto previo, es difícil para un niño identificar que el oso está realizando un paseo, ya que la secuencia se percibe más como una lista de objetos o conceptos inconexos que como una oración con sentido completo."
+    },
+    {
+      "id": 966,
+      "Text": "Enviamos un mensaje fácil y corto",
+      "Prediction": "pict_27359 pict_8474 pict_37340 pict_32302 pict_3047 pict_4615",
+      "score": 2,
+      "semantic_errors": [
+        "La secuencia contiene un exceso de pictogramas (6) para una oración de 6 palabras, lo que sugiere una traducción literal palabra por palabra que pierde la cohesión semántica.",
+        "La falta de contexto visual sobre qué significa 'fácil' y 'corto' en el sistema de pictogramas genera una cadena de conceptos abstractos difíciles de interpretar como una acción comunicativa."
+      ],
+      "missing_concepts": [
+        "La intención de 'enviar' un mensaje no se percibe como una acción completa.",
+        "Los conceptos de 'fácil' y 'corto' son altamente abstractos y no se traducen bien en una secuencia lógica sin un sustantivo claro."
+      ],
+      "comments": "La secuencia es demasiado larga y abstracta. Para un niño con dificultades de comunicación, esta cadena de pictogramas resulta confusa porque no establece una relación clara entre el sujeto, la acción y el objeto. Se entiende que hay varios conceptos, pero no se logra captar la idea de 'enviar un mensaje' de forma coherente."
+    },
+    {
+      "id": 967,
+      "Text": "Explicar el orden",
+      "Prediction": "pict_16705 pict_2872",
+      "score": 3,
+      "semantic_errors": [
+        "La secuencia es ambigua y depende totalmente del contexto visual de los pictogramas específicos, los cuales no tienen una carga semántica universal clara para 'explicar' y 'orden'."
+      ],
+      "missing_concepts": [
+        "La acción de 'explicar' (comunicación verbal/didáctica) no está claramente representada.",
+        "El concepto de 'orden' (secuencia lógica) es abstracto y difícil de identificar sin un contexto previo."
+      ],
+      "comments": "La secuencia es demasiado abstracta. Si bien los pictogramas pueden representar una acción y un objeto, no logran transmitir la instrucción específica de 'explicar el orden'. Un usuario podría interpretar esto como 'hacer una fila' o 'ver una lista', pero no necesariamente la acción pedagógica de explicar una secuencia."
+    },
+    {
+      "id": 968,
+      "Text": "Trabajos manuales",
+      "Prediction": "pict_16087 pict_32661",
+      "score": 5,
+      "semantic_errors": [],
+      "missing_concepts": [],
+      "comments": "La secuencia representa de forma clara y directa la actividad de realizar manualidades. Los pictogramas seleccionados son convencionales y transmiten la intención comunicativa sin ambigüedades, siendo perfectamente comprensibles para el usuario objetivo."
+    },
+    {
+      "id": 969,
+      "Text": "Hablar de mi",
+      "Prediction": "pict_6517 pict_12264",
+      "score": 5,
+      "semantic_errors": [],
+      "missing_concepts": [],
+      "comments": "La secuencia logra transmitir con éxito la intención comunicativa de 'hablar de uno mismo'. Los pictogramas seleccionados son representativos y el mensaje es claro para un usuario, cumpliendo con el objetivo de comunicación funcional."
+    },
+    {
+      "id": 970,
+      "Text": "En la granja, les dieron comida a las gallinas",
+      "Prediction": "pict_7029 pict_32482 pict_7031 pict_28431 pict_4611 pict_2403",
+      "score": 3,
+      "semantic_errors": [
+        "La secuencia carece de conectores lógicos que indiquen la relación entre la granja y la acción de alimentar",
+        "La falta de estructura sintáctica dificulta identificar quién realiza la acción"
+      ],
+      "missing_concepts": [
+        "La preposición 'en' (ubicación)",
+        "El sujeto implícito 'ellos/ellas' (quienes realizan la acción)",
+        "El verbo 'dar' (la acción de entregar el alimento)"
+      ],
+      "comments": "La secuencia logra transmitir los conceptos clave (granja, comida, gallinas), pero al carecer de elementos que indiquen la acción de 'dar' o 'alimentar', el mensaje se percibe como una lista de elementos aislados en lugar de una oración completa. Se entiende el contexto, pero requiere esfuerzo cognitivo para inferir la relación entre los pictogramas."
+    },
+    {
+      "id": 971,
+      "Text": "Dani desayunó un bocadillo y una mandarina",
+      "Prediction": "pict_3284 pict_4625 pict_8474 pict_16581 pict_3047 pict_8474 pict_11298",
+      "score": 3,
+      "semantic_errors": [
+        "La secuencia incluye una repetición innecesaria del pictograma de conjunción o conector (pict_8474) que puede confundir al lector.",
+        "La estructura es redundante al incluir siete pictogramas para una oración que requiere menos elementos."
+      ],
+      "missing_concepts": [
+        "No se especifica claramente el sujeto 'Dani' si los pictogramas no son personalizados.",
+        "No hay un pictograma claro que indique la acción de 'desayunar' o 'comer'."
+      ],
+      "comments": "La secuencia es comprensible en cuanto a los objetos (bocadillo y mandarina), pero la falta de un pictograma de acción (comer/desayunar) y la redundancia de conectores dificultan la fluidez. Se entiende que hay una relación entre los alimentos, pero la intención comunicativa de 'desayunar' se pierde."
+    },
+    {
+      "id": 972,
+      "Text": "¿Cuál es tu comida favorita?",
+      "Prediction": "pict_26022 pict_36480 pict_12281 pict_4611 pict_30012",
+      "score": 2,
+      "semantic_errors": [
+        "La secuencia carece de un pictograma que indique interrogación o pregunta",
+        "La combinación de pictogramas no establece una relación clara entre el sujeto y el objeto"
+      ],
+      "missing_concepts": [
+        "Interrogación",
+        "Pertenencia (tu)",
+        "Preferencia (favorita)"
+      ],
+      "comments": "La secuencia es demasiado ambigua. Aunque incluye conceptos relacionados con comida, no logra transmitir la intención de una pregunta ni la idea de preferencia personal, lo que impide que el niño comprenda que se le está solicitando una elección o respuesta."
+    }
+  ]
+}

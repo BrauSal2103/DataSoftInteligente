@@ -1,0 +1,9 @@
+Modelo,Prompt,N,Pearson r,Pearson p,Spearman r,Spearman p
+Modelo 1,estricto,50,0.1695,0.2392,0.1948,0.1753
+Modelo 1,flexible,50,0.3384,0.0162,0.3112,0.0278
+Modelo 2,estricto,50,-0.0378,0.7942,-0.0634,0.6616
+Modelo 2,flexible,50,0.0453,0.7548,-0.0099,0.9454
+Modelo 3,estricto,50,0.3274,0.0203,0.2316,0.1056
+Modelo 3,flexible,50,0.595,0.0,0.5413,0.0
+Modelo 4,estricto,50,0.4424,0.0013,0.3885,0.0053
+Modelo 4,flexible,50,0.3806,0.0064,0.374,0.0075

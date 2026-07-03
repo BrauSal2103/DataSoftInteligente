@@ -1,0 +1,9 @@
+Modelo,Prompt,N total,Casos con crítica de ortografía/puntuación,% del total,IDs ejemplo
+Modelo 1,estricto,50,0,0.0,[]
+Modelo 1,flexible,50,0,0.0,[]
+Modelo 2,estricto,50,0,0.0,[]
+Modelo 2,flexible,50,0,0.0,[]
+Modelo 3,estricto,50,0,0.0,[]
+Modelo 3,flexible,50,0,0.0,[]
+Modelo 4,estricto,50,0,0.0,[]
+Modelo 4,flexible,50,0,0.0,[]

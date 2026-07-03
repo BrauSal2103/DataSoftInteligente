@@ -1,0 +1,9 @@
+Modelo,Prompt,N total,Casos con crítica de ortografía/puntuación,% del total,IDs ejemplo
+Modelo 1,estricto,50,29,58.0,"[2, 3, 5, 7, 8]"
+Modelo 1,flexible,50,1,2.0,[18]
+Modelo 2,estricto,50,27,54.0,"[1, 2, 3, 5, 8]"
+Modelo 2,flexible,50,0,0.0,[]
+Modelo 3,estricto,50,28,56.0,"[2, 3, 5, 6, 7]"
+Modelo 3,flexible,50,3,6.0,"[18, 959, 963]"
+Modelo 4,estricto,50,26,52.0,"[1, 2, 3, 5, 6]"
+Modelo 4,flexible,50,0,0.0,[]
